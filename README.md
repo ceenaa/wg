@@ -5,7 +5,7 @@ Simple wireguard telegram bot administration panel that you can see users data u
 # How to use
 First install requirements.txt </br>
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 Then make .env file for your own and set env variables like
 `API_KEY="YOUR API KEY` and `CONF_NAME="YOUR CONFIGS NAME" ` </br>

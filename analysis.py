@@ -14,7 +14,7 @@ lastTotal = 0
 lastSortedPeer = []
 lastPeerMap = {}
 
-startTime = date(2023, 4, 21)
+startTime = date(2023, 4, 20)
 
 
 def MibToGiB(mib):

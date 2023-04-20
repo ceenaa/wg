@@ -15,7 +15,6 @@ lastSortedPeer = []
 lastPeerMap = {}
 
 startTime = date(2023, 4, 21)
-nowTime = date.today()
 
 
 def MibToGiB(mib):
@@ -33,11 +32,13 @@ def calcAverage():
 
 
 def dailyAverage():
+    nowTime = date.today()
     res = (nowTime - startTime).days
     return total / res
 
 
 def totalDays():
+    nowTime = date.today()
     return (nowTime - startTime).days
 
 
@@ -169,3 +170,4 @@ def reload():
 
 
 lastResult()
+

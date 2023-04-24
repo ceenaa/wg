@@ -126,3 +126,6 @@ def reload():
     maxPeer = sortedPeer[0]
     maxUsage = maxPeer.transfer
     count = len(sortedPeer)
+
+
+import_req()

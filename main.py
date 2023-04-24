@@ -98,6 +98,35 @@ def total_days_request(message):
     return message.text == "Total days"
 
 
+def export_request(message):
+    return message.text == "Export"
+
+
+@bot.message_handler(func=export_request)
+def send_export(message):
+    try:
+        file = open("peers.txt", "w")
+        for peer in analysis.sortedPeer:
+            file.write(str(peer) + "\n")
+        bot.send_message(message.chat.id, "Exported!")
+        file.close()
+    except:
+        bot.send_message(message.chat.id, "Reload needed!")
+
+
+def inport_request(message):
+    return message.text == "Import"
+
+
+@bot.message_handler(func=inport_request)
+def send_import(message):
+    try:
+
+        bot.send_message(message.chat.id, "Imported!")
+    except:
+        bot.send_message(message.chat.id, "Reload needed!")
+
+
 @bot.message_handler(func=total_days_request)
 def send_total_days(message):
     try:

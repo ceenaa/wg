@@ -42,57 +42,16 @@ def totalDays():
     return (nowTime - startTime).days
 
 
-def lastResult():
-    file = open("lres.txt", "r")
+def import_req():
+    file = open("peers.txt", "r")
     lines = file.readlines()
+    for i in range(0, len(lines), 4):
+        name = lines[i]
+        address = lines[i + 1]
+        last_handshake = lines[i + 2]
+        transfer = lines[i + 3]
+        peerMap[name] = models.peer(name, address, last_handshake, transfer)
     file.close()
-
-    global lastTotal, lastSortedPeer, lastPeerMap
-
-    lastTotal = 0
-    lastSortedPeer = []
-    lastPeerMap = {}
-
-    for i in range(5, len(lines), 7):
-        if i + 5 >= len(lines):
-            break
-        transfer = lines[i + 5].split(" ")
-        if len(transfer) < 3 or transfer[2] != "transfer:":
-            continue
-        address = lines[i + 3].split(" ")[4]
-        last_handshake = lines[i + 4].split(": ")[1]
-        received = transfer[3]
-        received_type = transfer[4]
-
-        sent = transfer[6]
-        sent_type = transfer[7]
-
-        transfer = 0
-
-        if received_type == "MiB":
-            transfer += MibToGiB(float(received))
-        elif received_type == "KiB":
-            transfer += kibToGiB(float(received))
-        elif received_type == "GiB":
-            transfer += float(received)
-
-        if sent_type == "MiB":
-            transfer += MibToGiB(float(sent))
-        elif sent_type == "KiB":
-            transfer += kibToGiB(float(sent))
-        elif sent_type == "GiB":
-            transfer += float(sent)
-
-        transfer = round(transfer, 2)
-        name = '%s' % confName
-        name += address.split(".")[3].split("/")[0]
-        if name in lastPeerMap:
-            lastPeerMap[name].transfer += transfer
-        else:
-            p = models.peer(name, address, last_handshake, transfer)
-            lastPeerMap[name] = p
-
-        lastTotal += transfer
 
 
 def reload():
@@ -154,7 +113,7 @@ def reload():
 
     for p in peerMap.keys():
         if p in lastPeerMap.keys():
-            peerMap[p].transfer += lastPeerMap[p].transfer
+            peerMap[p].transfer += round(lastPeerMap[p].transfer, 2)
     for p in lastPeerMap.keys():
         if p not in peerMap.keys():
             peerMap[p] = lastPeerMap[p]
@@ -167,7 +126,3 @@ def reload():
     maxPeer = sortedPeer[0]
     maxUsage = maxPeer.transfer
     count = len(sortedPeer)
-
-
-lastResult()
-

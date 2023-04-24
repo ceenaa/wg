@@ -1,0 +1,494 @@
+interface: wg0
+  public key: 94W/S3VsyZ7+ovKsVljO2q5u1vJYl6f7/t8dckVq/kA=
+  private key: (hidden)
+  listening port: 51820
+
+peer: P31euqe19BX+M2vUHRSzcbzaSlH7eR8QTdqQRWPG/Vw=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:37871
+  allowed ips: 10.66.68.19/32
+  latest handshake: Now
+  transfer: 93.19 MiB received, 765.49 MiB sent
+
+peer: /ZCuaGPbQg6LesUq4RC4pWFXc2IY5GXe8V02O8VwIxc=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:55106
+  allowed ips: 10.66.68.6/32
+  latest handshake: 6 seconds ago
+  transfer: 30.76 MiB received, 286.63 MiB sent
+
+peer: b4S+e0maGirlmkA25+/TsqubRrkjqi3NesINq/PfRyc=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:38350
+  allowed ips: 10.66.68.32/32
+  latest handshake: 8 seconds ago
+  transfer: 6.72 MiB received, 238.79 MiB sent
+
+peer: 5DV1JMyssxamg8QNx1jMdSIYI/6wtzUN5lhvhySgWyc=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:40477
+  allowed ips: 10.66.68.3/32
+  latest handshake: 10 seconds ago
+  transfer: 115.35 MiB received, 878.46 MiB sent
+
+peer: Y4FaWaomeTn78DtCZM1zeffMjD98VHRHdtNt0CV2EGw=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:44790
+  allowed ips: 10.66.68.26/32
+  latest handshake: 30 seconds ago
+  transfer: 11.01 MiB received, 62.78 MiB sent
+
+peer: eUsr18izaJdrEprol2Sd8VBCKZ9Bojl5ODPqi83HxA0=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:53392
+  allowed ips: 10.66.68.10/32
+  latest handshake: 40 seconds ago
+  transfer: 15.59 MiB received, 161.91 MiB sent
+
+peer: 1UVhLYB5rvcsOm8IssSVUuF6o+bsnrP4TnXbF6Kfkg0=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:44090
+  allowed ips: 10.66.68.35/32
+  latest handshake: 48 seconds ago
+  transfer: 10.29 MiB received, 117.50 MiB sent
+
+peer: NaPjJeBh7PJKD+Q49chXDn70kDtriNYVsVfGLxuReCg=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:58835
+  allowed ips: 10.66.68.18/32
+  latest handshake: 48 seconds ago
+  transfer: 27.97 MiB received, 566.82 MiB sent
+
+peer: e4x/EFyvSOltrjo0mOuP/5AUqksHvU9dU4cVoxJ/Lhc=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:43806
+  allowed ips: 10.66.68.23/32
+  latest handshake: 1 minute, 8 seconds ago
+  transfer: 187.81 MiB received, 3.94 GiB sent
+
+peer: AWApMS+6YcNkL87XgWDroFqtdxll3dfQZtTorCWrbUM=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:51163
+  allowed ips: 10.66.68.24/32
+  latest handshake: 1 minute, 9 seconds ago
+  transfer: 38.38 MiB received, 782.33 MiB sent
+
+peer: 2zSY/oNI7CC8w52qXBH6yzmvvRw4ePvzLwlEVpvUigQ=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:41378
+  allowed ips: 10.66.68.30/32
+  latest handshake: 1 minute, 19 seconds ago
+  transfer: 16.79 MiB received, 144.07 MiB sent
+
+peer: E4geVf+ZC9ezRsrLSj5CyWO/MvIgROfHYZjP7sMBwic=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:42381
+  allowed ips: 10.66.68.29/32
+  latest handshake: 1 minute, 31 seconds ago
+  transfer: 78.42 MiB received, 493.89 MiB sent
+
+peer: Sh+CRvJ4B+Fl1RZOM9kqPwVMLfdeDGKOGxd9ntSziWA=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:57641
+  allowed ips: 10.66.68.12/32
+  latest handshake: 1 minute, 34 seconds ago
+  transfer: 65.46 MiB received, 2.09 GiB sent
+
+peer: WlWoTrCqdoupoxDyl1x/1PF7ISoO9bX1KjNvuw3B1F0=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:38599
+  allowed ips: 10.66.68.11/32
+  latest handshake: 1 minute, 43 seconds ago
+  transfer: 68.57 MiB received, 1.28 GiB sent
+
+peer: 3s9zSNEmRQj813g5ygQiEMNLnUYHoB77KtC4WDfMcEA=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:53284
+  allowed ips: 10.66.68.31/32
+  latest handshake: 2 minutes, 15 seconds ago
+  transfer: 24.17 MiB received, 340.52 MiB sent
+
+peer: A+WEC5GdroIH//E8WjyEeDwaa7kIKPdQhUj4hk6HMlE=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:42202
+  allowed ips: 10.66.68.25/32
+  latest handshake: 2 minutes, 48 seconds ago
+  transfer: 40.13 MiB received, 546.26 MiB sent
+
+peer: 6dSQfgzU7YRrjokOAbth8pcWLFdozWdsbChPjNZL0QI=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:34209
+  allowed ips: 10.66.68.36/32
+  latest handshake: 4 minutes, 2 seconds ago
+  transfer: 13.43 MiB received, 292.10 MiB sent
+
+peer: EPPI6rSPS+pRltGhKmD48gaRyKux8IXFIFtFPkoTyCo=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:39905
+  allowed ips: 10.66.68.8/32
+  latest handshake: 4 minutes, 2 seconds ago
+  transfer: 25.85 MiB received, 522.58 MiB sent
+
+peer: 15SV6j+z2KMHxYDkU5JXQ7SDwgIvyNnIgdTV8JwL7mQ=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:52890
+  allowed ips: 10.66.68.9/32
+  latest handshake: 6 minutes, 11 seconds ago
+  transfer: 41.24 MiB received, 388.14 MiB sent
+
+peer: UgrIIzdqwzmRruveH/JxzgCfGbP8hDpMUT8Inqu2oH8=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:41093
+  allowed ips: 10.66.68.21/32
+  latest handshake: 7 minutes, 46 seconds ago
+  transfer: 35.39 MiB received, 515.91 MiB sent
+
+peer: J+lhI7BtC8CekYcB6MuYYn8vZPwBjjCm0WTToEq/VFw=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:42613
+  allowed ips: 10.66.68.14/32
+  latest handshake: 13 minutes, 31 seconds ago
+  transfer: 41.56 MiB received, 494.69 MiB sent
+
+peer: OrRCwxU2thZG8/9N3fr1M3iLfPz5AIMGMU7L11auhTQ=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:33748
+  allowed ips: 10.66.68.5/32
+  latest handshake: 14 minutes, 1 second ago
+  transfer: 21.59 MiB received, 315.62 MiB sent
+
+peer: i12Zd9TkAdL27XxYl87/xNsArmRNwRr4zbhJpvfMSCs=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:47392
+  allowed ips: 10.66.68.4/32
+  latest handshake: 19 minutes, 55 seconds ago
+  transfer: 52.02 MiB received, 892.76 MiB sent
+
+peer: 8FVY5selNm+v95QvJcsWsFyxpAHgwpeMWRuO+g1USyI=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:41795
+  allowed ips: 10.66.68.17/32
+  latest handshake: 23 minutes, 34 seconds ago
+  transfer: 55.50 MiB received, 1.10 GiB sent
+
+peer: NxdDrBVyrD6knejzh0Ybw6PBkXG1zSeIBIVY+UOh9xs=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:42214
+  allowed ips: 10.66.68.13/32
+  latest handshake: 32 minutes, 45 seconds ago
+  transfer: 123.00 MiB received, 1.26 GiB sent
+
+peer: zFBeZ8M+D7QoaqXHwn25rOzpKfhykIAdxV9elf+KHUM=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:46912
+  allowed ips: 10.66.68.27/32
+  latest handshake: 56 minutes, 9 seconds ago
+  transfer: 88.71 MiB received, 1.13 GiB sent
+
+peer: 9hayd7oE8ux6ctNHe3X4Gd0hS/jR/F/1eCRe6J7TMDM=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:60454
+  allowed ips: 10.66.68.28/32
+  latest handshake: 1 hour, 22 minutes, 57 seconds ago
+  transfer: 131.97 MiB received, 424.13 MiB sent
+
+peer: 5JMvkyn+xa+ToI03JhaPG979NuVQerlsYiL8nJKpVxI=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:40283
+  allowed ips: 10.66.68.16/32
+  latest handshake: 3 hours, 6 minutes, 26 seconds ago
+  transfer: 4.94 MiB received, 9.20 MiB sent
+
+peer: fEwCRYhjIZDfemWP65YOq6zY1uxqAvCYF2RbxJFhezA=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:37150
+  allowed ips: 10.66.68.33/32
+  latest handshake: 6 hours, 24 minutes, 36 seconds ago
+  transfer: 1.38 MiB received, 10.99 MiB sent
+
+peer: JMapPLg3N24aB+juTygaih4q8/UMPZNSyBNkj+7mZSQ=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:58413
+  allowed ips: 10.66.68.2/32
+  latest handshake: 8 hours, 26 minutes, 10 seconds ago
+  transfer: 10.63 KiB received, 41.25 KiB sent
+
+peer: uPRv6pZpNLArCU4yUoxJB5PEuMDxlmBmZiRIecIy+WA=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:55307
+  allowed ips: 10.66.68.37/32
+  latest handshake: 9 hours, 55 minutes, 14 seconds ago
+  transfer: 2.76 MiB received, 52.95 MiB sent
+
+peer: rLVY2Z7fQkTf3IowrfKEdBN1UUCRTiVmLQJ0ApKgklI=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:34593
+  allowed ips: 10.66.68.20/32
+  latest handshake: 12 hours, 36 minutes, 27 seconds ago
+  transfer: 4.54 MiB received, 119.73 MiB sent
+
+peer: wg7NPXMo1YaApgVd1XDfy+mvREgQ60PLW7h6hBB8KwM=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:57004
+  allowed ips: 10.66.68.7/32
+  latest handshake: 13 hours, 34 minutes, 23 seconds ago
+  transfer: 17.30 MiB received, 237.28 MiB sent
+
+peer: OrRCwxU2thZG8/9N3fr1M3iLfPz5AIMGMU7L11auhTQ=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:40251
+  allowed ips: 10.66.68.5/32
+  latest handshake: 1 second ago
+  transfer: 35.85 MiB received, 432.98 MiB sent
+
+peer: eUsr18izaJdrEprol2Sd8VBCKZ9Bojl5ODPqi83HxA0=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:58279
+  allowed ips: 10.66.68.10/32
+  latest handshake: 8 seconds ago
+  transfer: 62.52 MiB received, 1.30 GiB sent
+
+peer: 5DV1JMyssxamg8QNx1jMdSIYI/6wtzUN5lhvhySgWyc=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:51614
+  allowed ips: 10.66.68.3/32
+  latest handshake: 23 seconds ago
+  transfer: 54.15 MiB received, 503.05 MiB sent
+
+peer: E4geVf+ZC9ezRsrLSj5CyWO/MvIgROfHYZjP7sMBwic=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:55374
+  allowed ips: 10.66.68.29/32
+  latest handshake: 38 seconds ago
+  transfer: 72.14 MiB received, 468.66 MiB sent
+
+peer: Os1q+vzAEs6Ce6jTaYqUi28AV6B17RbL4VP9eIfL6ho=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:60342
+  allowed ips: 10.66.68.39/32
+  latest handshake: 49 seconds ago
+  transfer: 13.84 MiB received, 217.74 MiB sent
+
+peer: 8FVY5selNm+v95QvJcsWsFyxpAHgwpeMWRuO+g1USyI=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:53960
+  allowed ips: 10.66.68.17/32
+  latest handshake: 51 seconds ago
+  transfer: 129.39 MiB received, 1.09 GiB sent
+
+peer: JMapPLg3N24aB+juTygaih4q8/UMPZNSyBNkj+7mZSQ=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:52340
+  allowed ips: 10.66.68.2/32
+  latest handshake: 1 minute, 10 seconds ago
+  transfer: 78.27 KiB received, 181.29 KiB sent
+
+peer: P31euqe19BX+M2vUHRSzcbzaSlH7eR8QTdqQRWPG/Vw=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:51157
+  allowed ips: 10.66.68.19/32
+  latest handshake: 1 minute, 15 seconds ago
+  transfer: 151.40 MiB received, 2.04 GiB sent
+
+peer: NxdDrBVyrD6knejzh0Ybw6PBkXG1zSeIBIVY+UOh9xs=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:55798
+  allowed ips: 10.66.68.13/32
+  latest handshake: 1 minute, 22 seconds ago
+  transfer: 56.19 MiB received, 430.68 MiB sent
+
+peer: UgrIIzdqwzmRruveH/JxzgCfGbP8hDpMUT8Inqu2oH8=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:50417
+  allowed ips: 10.66.68.21/32
+  latest handshake: 1 minute, 26 seconds ago
+  transfer: 141.86 MiB received, 805.02 MiB sent
+
+peer: 5JMvkyn+xa+ToI03JhaPG979NuVQerlsYiL8nJKpVxI=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:60259
+  allowed ips: 10.66.68.16/32
+  latest handshake: 1 minute, 33 seconds ago
+  transfer: 42.65 MiB received, 209.91 MiB sent
+
+peer: /ZCuaGPbQg6LesUq4RC4pWFXc2IY5GXe8V02O8VwIxc=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:48174
+  allowed ips: 10.66.68.6/32
+  latest handshake: 1 minute, 37 seconds ago
+  transfer: 86.50 MiB received, 1.03 GiB sent
+
+peer: WlWoTrCqdoupoxDyl1x/1PF7ISoO9bX1KjNvuw3B1F0=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:48412
+  allowed ips: 10.66.68.11/32
+  latest handshake: 1 minute, 38 seconds ago
+  transfer: 77.63 MiB received, 1011.28 MiB sent
+
+peer: Y4FaWaomeTn78DtCZM1zeffMjD98VHRHdtNt0CV2EGw=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:45646
+  allowed ips: 10.66.68.26/32
+  latest handshake: 1 minute, 47 seconds ago
+  transfer: 43.31 MiB received, 512.94 MiB sent
+
+peer: Sh+CRvJ4B+Fl1RZOM9kqPwVMLfdeDGKOGxd9ntSziWA=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:39347
+  allowed ips: 10.66.68.12/32
+  latest handshake: 2 minutes, 6 seconds ago
+  transfer: 25.27 MiB received, 663.28 MiB sent
+
+peer: b4S+e0maGirlmkA25+/TsqubRrkjqi3NesINq/PfRyc=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:48074
+  allowed ips: 10.66.68.32/32
+  latest handshake: 2 minutes, 10 seconds ago
+  transfer: 8.59 MiB received, 97.10 MiB sent
+
+peer: 1UVhLYB5rvcsOm8IssSVUuF6o+bsnrP4TnXbF6Kfkg0=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:55393
+  allowed ips: 10.66.68.35/32
+  latest handshake: 2 minutes, 47 seconds ago
+  transfer: 85.69 MiB received, 761.96 MiB sent
+
+peer: ER2KSjqKexZjys2IOYc6aZyQsQn6KJZEAkEhrm2MgCM=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:51162
+  allowed ips: 10.66.68.38/32
+  latest handshake: 4 minutes, 3 seconds ago
+  transfer: 101.79 MiB received, 1018.29 MiB sent
+
+peer: EPPI6rSPS+pRltGhKmD48gaRyKux8IXFIFtFPkoTyCo=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:35583
+  allowed ips: 10.66.68.8/32
+  latest handshake: 10 minutes, 13 seconds ago
+  transfer: 32.79 MiB received, 723.64 MiB sent
+
+peer: fEwCRYhjIZDfemWP65YOq6zY1uxqAvCYF2RbxJFhezA=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:32771
+  allowed ips: 10.66.68.33/32
+  latest handshake: 10 minutes, 13 seconds ago
+  transfer: 2.91 MiB received, 10.35 MiB sent
+
+peer: NaPjJeBh7PJKD+Q49chXDn70kDtriNYVsVfGLxuReCg=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:48966
+  allowed ips: 10.66.68.18/32
+  latest handshake: 15 minutes, 33 seconds ago
+  transfer: 62.36 MiB received, 950.71 MiB sent
+
+peer: i12Zd9TkAdL27XxYl87/xNsArmRNwRr4zbhJpvfMSCs=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:51743
+  allowed ips: 10.66.68.4/32
+  latest handshake: 22 minutes, 38 seconds ago
+  transfer: 44.33 MiB received, 851.45 MiB sent
+
+peer: 6dSQfgzU7YRrjokOAbth8pcWLFdozWdsbChPjNZL0QI=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:34881
+  allowed ips: 10.66.68.36/32
+  latest handshake: 31 minutes, 3 seconds ago
+  transfer: 174.48 MiB received, 1.13 GiB sent
+
+peer: A+WEC5GdroIH//E8WjyEeDwaa7kIKPdQhUj4hk6HMlE=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:48160
+  allowed ips: 10.66.68.25/32
+  latest handshake: 44 minutes, 57 seconds ago
+  transfer: 227.59 MiB received, 2.91 GiB sent
+
+peer: 3s9zSNEmRQj813g5ygQiEMNLnUYHoB77KtC4WDfMcEA=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:55761
+  allowed ips: 10.66.68.31/32
+  latest handshake: 1 hour, 30 minutes, 39 seconds ago
+  transfer: 73.22 MiB received, 1.44 GiB sent
+
+peer: AWApMS+6YcNkL87XgWDroFqtdxll3dfQZtTorCWrbUM=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:49653
+  allowed ips: 10.66.68.24/32
+  latest handshake: 1 hour, 37 minutes, 29 seconds ago
+  transfer: 26.87 MiB received, 569.23 MiB sent
+
+peer: uPRv6pZpNLArCU4yUoxJB5PEuMDxlmBmZiRIecIy+WA=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:59655
+  allowed ips: 10.66.68.37/32
+  latest handshake: 1 hour, 51 minutes, 46 seconds ago
+  transfer: 6.89 MiB received, 119.10 MiB sent
+
+peer: J+lhI7BtC8CekYcB6MuYYn8vZPwBjjCm0WTToEq/VFw=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:40668
+  allowed ips: 10.66.68.14/32
+  latest handshake: 1 hour, 59 minutes, 5 seconds ago
+  transfer: 95.61 MiB received, 1.13 GiB sent
+
+peer: e4x/EFyvSOltrjo0mOuP/5AUqksHvU9dU4cVoxJ/Lhc=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:40153
+  allowed ips: 10.66.68.23/32
+  latest handshake: 2 hours, 11 minutes, 35 seconds ago
+  transfer: 180.26 MiB received, 3.88 GiB sent
+
+peer: 2zSY/oNI7CC8w52qXBH6yzmvvRw4ePvzLwlEVpvUigQ=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:33692
+  allowed ips: 10.66.68.30/32
+  latest handshake: 2 hours, 24 minutes, 2 seconds ago
+  transfer: 37.08 MiB received, 126.45 MiB sent
+
+peer: 15SV6j+z2KMHxYDkU5JXQ7SDwgIvyNnIgdTV8JwL7mQ=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:51868
+  allowed ips: 10.66.68.9/32
+  latest handshake: 2 hours, 47 minutes, 33 seconds ago
+  transfer: 43.10 MiB received, 457.73 MiB sent
+
+peer: wg7NPXMo1YaApgVd1XDfy+mvREgQ60PLW7h6hBB8KwM=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:51527
+  allowed ips: 10.66.68.7/32
+  latest handshake: 9 hours, 34 minutes, 14 seconds ago
+  transfer: 61.75 MiB received, 889.11 MiB sent
+
+peer: rLVY2Z7fQkTf3IowrfKEdBN1UUCRTiVmLQJ0ApKgklI=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:58890
+  allowed ips: 10.66.68.20/32
+  latest handshake: 10 hours, 28 minutes, 15 seconds ago
+  transfer: 5.42 MiB received, 78.28 MiB sent
+
+peer: zFBeZ8M+D7QoaqXHwn25rOzpKfhykIAdxV9elf+KHUM=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:40091
+  allowed ips: 10.66.68.27/32
+  latest handshake: 11 hours, 2 minutes, 47 seconds ago
+  transfer: 113.25 MiB received, 1.57 GiB sent
+
+peer: HCk7h7k//t5bTXUnzDytKX9puOiY1XbcT2G9avN7bQM=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:45510
+  allowed ips: 10.66.68.40/32
+  latest handshake: 11 hours, 53 minutes, 48 seconds ago
+  transfer: 4.24 MiB received, 43.52 MiB sent
+
+peer: 82Ga7B27bmPSmAhJdHcpe7Jvb3xZpO6mZn3EW4cQgl4=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:51056
+  allowed ips: 10.66.68.41/32
+  latest handshake: 12 hours, 5 minutes, 12 seconds ago
+  transfer: 281.15 MiB received, 3.89 GiB sent
+
+peer: 9hayd7oE8ux6ctNHe3X4Gd0hS/jR/F/1eCRe6J7TMDM=
+  preshared key: (hidden)
+  endpoint: 127.0.0.1:59212
+  allowed ips: 10.66.68.28/32
+  latest handshake: 12 hours, 54 minutes, 53 seconds ago
+  transfer: 11.96 MiB received, 70.86 MiB sent

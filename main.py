@@ -121,7 +121,6 @@ def inport_request(message):
 @bot.message_handler(func=inport_request)
 def send_import(message):
     try:
-
         bot.send_message(message.chat.id, "Imported!")
     except:
         bot.send_message(message.chat.id, "Reload needed!")
@@ -152,9 +151,4 @@ def send_npk(message):
         bot.send_message(cid, "Invalid command!")
 
 
-while True:
-    try:
-        bot.polling()
-
-    except:
-        pass
+bot.polling()

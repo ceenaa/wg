@@ -46,20 +46,20 @@ def import_req():
     lines = file.readlines()
     global lastTotal, lastPeerMap
     for i in range(0, len(lines), 4):
-        name = lines[i]
-        address = lines[i + 1]
-        last_handshake = lines[i + 2]
-        transfer = float(lines[i + 3])
+        name = lines[i].strip()
+        address = lines[i + 1].strip()
+        last_handshake = lines[i + 2].strip()
+        transfer = float(lines[i + 3].strip())
         lastTotal += transfer
         lastPeerMap[name] = models.peer(name, address, last_handshake, transfer)
     file.close()
 
 
 def reload():
-    file = open("res.txt", "w")
-    wg = subprocess.check_output("wg", shell=True)
-    file.write(wg.decode("utf-8"))
-    file.close()
+    # file = open("res.txt", "w")
+    # wg = subprocess.check_output("wg", shell=True)
+    # file.write(wg.decode("utf-8"))
+    # file.close()
 
     file = open("res.txt", "r")
     lines = file.readlines()

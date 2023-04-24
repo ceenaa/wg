@@ -45,6 +45,7 @@ def totalDays():
 def import_req():
     file = open("peers.txt", "r")
     lines = file.readlines()
+    global peerMap
     for i in range(0, len(lines), 4):
         name = lines[i]
         address = lines[i + 1]

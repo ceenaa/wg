@@ -49,7 +49,7 @@ def import_req():
         name = lines[i]
         address = lines[i + 1]
         last_handshake = lines[i + 2]
-        transfer = lines[i + 3]
+        transfer = float(lines[i + 3])
         lastTotal += transfer
         peerMap[name] = models.peer(name, address, last_handshake, transfer)
     file.close()

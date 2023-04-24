@@ -11,7 +11,6 @@ confName = os.environ.get("CONF_NAME")
 
 global total, count, maxUsage, maxPeer, sortedPeer, peerMap
 lastTotal = 0
-lastSortedPeer = []
 lastPeerMap = {}
 
 startTime = date(2023, 4, 19)
@@ -45,12 +44,13 @@ def totalDays():
 def import_req():
     file = open("peers.txt", "r")
     lines = file.readlines()
-    global peerMap
+    global lastTotal, lastPeerMap
     for i in range(0, len(lines), 4):
         name = lines[i]
         address = lines[i + 1]
         last_handshake = lines[i + 2]
         transfer = lines[i + 3]
+        lastTotal += transfer
         peerMap[name] = models.peer(name, address, last_handshake, transfer)
     file.close()
 

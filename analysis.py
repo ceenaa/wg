@@ -80,8 +80,8 @@ def reload():
         transfer = lines[i + 5].split(" ")
         if len(transfer) < 3 or transfer[2] != "transfer:":
             continue
-        address = lines[i + 3].split(" ")[4]
-        last_handshake = lines[i + 4].split(": ")[1]
+        address = lines[i + 3].split(" ")[4].strip()
+        last_handshake = lines[i + 4].split(": ")[1].strip()
         received = transfer[3]
         received_type = transfer[4]
 

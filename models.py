@@ -6,6 +6,6 @@ class peer:
         self.transfer = transfer
 
     def __str__(self):
-        s = f"{self.name}\n{self.address}{self.last_handshake}{round(self.transfer, 2)}"
+        s = f"{self.name}\n{self.address}\n{self.last_handshake}\n{round(self.transfer, 2)}"
         return s
 

@@ -9,9 +9,10 @@ import subprocess
 load_dotenv()
 confName = os.environ.get("CONF_NAME")
 
-global total, count, maxUsage, maxPeer, sortedPeer, peerMap
+global total, count, maxUsage, maxPeer, sortedPeer
 lastTotal = 0
 lastPeerMap = {}
+peerMap = {}
 
 startTime = date(2023, 4, 19)
 
@@ -56,10 +57,10 @@ def import_req():
 
 
 def reload():
-    file = open("res.txt", "w")
-    wg = subprocess.check_output("wg", shell=True)
-    file.write(wg.decode("utf-8"))
-    file.close()
+    # file = open("res.txt", "w")
+    # wg = subprocess.check_output("wg", shell=True)
+    # file.write(wg.decode("utf-8"))
+    # file.close()
 
     file = open("res.txt", "r")
     lines = file.readlines()
@@ -80,7 +81,9 @@ def reload():
         transfer = lines[i + 5].split(" ")
         if len(transfer) < 3 or transfer[2] != "transfer:":
             continue
-        address = lines[i + 3].split(" ")[4].strip()
+        if 'allowed ips' in lines[i + 3]:
+            break
+        address = lines[i + 3].split(" ")[4]
         last_handshake = lines[i + 4].split(": ")[1].strip()
         received = transfer[3]
         received_type = transfer[4]
@@ -129,4 +132,4 @@ def reload():
     count = len(sortedPeer)
 
 
-import_req()
+

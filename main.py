@@ -135,7 +135,7 @@ def send_total_days(message):
 
 
 def user_request(message):
-    return message.text in analysis.peerMap
+    return message.text in analysis.peerMap.keys()
 
 
 @bot.message_handler(func=user_request)
@@ -151,4 +151,5 @@ def send_npk(message):
         bot.send_message(cid, "Invalid command!")
 
 
+analysis.import_req()
 bot.polling()

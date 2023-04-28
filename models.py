@@ -1,8 +1,8 @@
 class peer:
     def __init__(self, name, address, last_handshake, transfer):
-        self.name = name
-        self.address = address
-        self.last_handshake = last_handshake
+        self.name = name.strip()
+        self.address = address.strip()
+        self.last_handshake = last_handshake.strip()
         self.transfer = transfer
 
     def __str__(self):

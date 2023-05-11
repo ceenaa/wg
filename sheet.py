@@ -5,27 +5,30 @@ from google.oauth2 import service_account
 
 import analysis
 
-SERVICE_ACCOUNT_FILE = 'keys.json'
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-creds = None
-creds = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+def main():
 
-# The ID spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1JMfbph5fxaqu1MrQFIMn6Ju5ZiFbCJsxqpnE82FTeQo'
+    SERVICE_ACCOUNT_FILE = 'keys.json'
+    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-service = build('sheets', 'v4', credentials=creds)
+    creds = None
+    creds = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-# Call the Sheets API
-sheet = service.spreadsheets()
+    # The ID spreadsheet.
+    SAMPLE_SPREADSHEET_ID = '1JMfbph5fxaqu1MrQFIMn6Ju5ZiFbCJsxqpnE82FTeQo'
 
-users = []
-for p in analysis.sortedPeer:
-    users.append([p.name, p.transfer])
+    service = build('sheets', 'v4', credentials=creds)
 
-body = {
-    'values': users
-}
+    # Call the Sheets API
+    sheet = service.spreadsheets()
 
-result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet2!A2", body=body, valueInputOption="USER_ENTERED").execute()
+    users = []
+    for p in analysis.sortedPeer:
+        users.append([p.name, p.transfer])
+
+    body = {
+        'values': users
+    }
+
+    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet2!A2", body=body, valueInputOption="USER_ENTERED").execute()

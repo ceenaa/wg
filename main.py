@@ -2,6 +2,8 @@ import analysis
 import os
 import telebot
 
+import sheet
+
 API_KEY = os.getenv("API_KEY")
 bot = telebot.TeleBot(API_KEY)
 
@@ -83,6 +85,7 @@ def max_request(message):
 def send_max(message):
     try:
         analysis.reload()
+        sheet.main()
         bot.send_message(message.chat.id, "Reloaded!")
     except:
         bot.send_message(message.chat.id, "Error")

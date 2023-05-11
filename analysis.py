@@ -9,7 +9,9 @@ import subprocess
 load_dotenv()
 confName = os.environ.get("CONF_NAME")
 
-global total, count, maxUsage, maxPeer, sortedPeer
+global total, count, maxUsage, maxPeer, sortedPeer, addressToName
+
+addressToName = {}
 lastTotal = 0
 lastPeerMap = {}
 peerMap = {}
@@ -27,7 +29,7 @@ def kibToGiB(kib):
 
 def calcAverage():
     avg = total / count
-    avg = round(avg, 2)
+    avg = format(avg, '.2f')
     return avg
 
 
@@ -42,6 +44,19 @@ def totalDays():
     return (nowTime - startTime).days
 
 
+def loadNameToAddress():
+    file = open("~/etc/wireguard/wg0.conf", "r")
+    # file = open("test.conf", "r")
+    lines = file.readlines()
+    for i in range(13, len(lines), 6):
+        name = lines[i]
+        name = name.split(" ")[1]
+        address = lines[i + 3]
+        address = address.split(" = ")[1]
+        address = address.strip()
+        addressToName[address] = name
+
+
 def import_req():
     file = open("peers.txt", "r")
     lines = file.readlines()
@@ -49,6 +64,7 @@ def import_req():
     for i in range(0, len(lines), 4):
         name = lines[i].strip()
         address = lines[i + 1].strip()
+        name = addressToName[address]
         last_handshake = lines[i + 2].strip()
         transfer = float(lines[i + 3].strip())
         lastTotal += transfer
@@ -83,7 +99,10 @@ def reload():
             continue
         if 'allowed ips' in lines[i + 2]:
             break
-        address = lines[i + 3].split(" ")[4]
+        address = lines[i + 3]
+        address = address.split(": ")[1]
+        address = address.strip()
+
         last_handshake = lines[i + 4].split(": ")[1].strip()
         received = transfer[3]
         received_type = transfer[4]
@@ -107,24 +126,21 @@ def reload():
         elif sent_type == "GiB":
             transfer += float(sent)
 
-        transfer = round(transfer, 2)
-        name = '%s' % confName
-        name += address.split(".")[3].split("/")[0]
-
+        name = addressToName[address]
         p = models.peer(name, address, last_handshake, transfer)
         peerMap[name] = p
         total += transfer
 
     for p in peerMap.keys():
         if p in lastPeerMap.keys():
-            peerMap[p].transfer += round(lastPeerMap[p].transfer, 2)
+            peerMap[p].increaseTransfer(lastPeerMap[p].transfer)
     for p in lastPeerMap.keys():
         if p not in peerMap.keys():
             peerMap[p] = lastPeerMap[p]
 
     peers = peerMap.values()
     total += lastTotal
-    total = round(total, 2)
+    total = total
 
     sortedPeer = sorted(peers, key=lambda peer: peer.transfer, reverse=True)
     maxPeer = sortedPeer[0]
@@ -132,4 +148,4 @@ def reload():
     count = len(sortedPeer)
 
 
-
+loadNameToAddress()

@@ -38,9 +38,15 @@ def all_request(message):
 def send_all(message):
     try:
         s = ""
+        i = 0
         for peer in analysis.sortedPeer:
             s += str(peer) + "\n----------------\n"
-        bot.send_message(message.chat.id, s)
+            i += 1
+            if i % 20 == 0:
+                bot.send_message(message.chat.id, s)
+                s = ""
+        if s != "":
+            bot.send_message(message.chat.id, s)
     except:
         bot.send_message(message.chat.id, "Reload needed!")
 

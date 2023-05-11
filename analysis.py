@@ -45,7 +45,7 @@ def totalDays():
 
 
 def loadNameToAddress():
-    file = open("~/etc/wireguard/wg0.conf", "r")
+    file = open("/etc/wireguard/wg0.conf", "r")
     # file = open("test.conf", "r")
     lines = file.readlines()
     for i in range(13, len(lines), 6):

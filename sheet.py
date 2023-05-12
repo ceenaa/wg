@@ -25,7 +25,8 @@ def main():
 
     users = []
     for p in analysis.sortedPeer:
-        users.append([p.name, p.transfer])
+        if not "sina" in p.name:
+            users.append([p.name, p.transfer])
 
     body = {
         'values': users

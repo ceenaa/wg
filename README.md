@@ -1,6 +1,9 @@
 # Wg
+(**on going repo**)</br>
 Simple wireguard telegram bot administration panel that you can see users data usage total use, average and see details of wireguard statistics.
-</br>(**on going repo**)
+</br></br>**NEW**</br>
+Google sheet feature added that you can save your user usage into your google sheet. </br>
+just use your information in sheet.py and import your google api keys to files.
 
 # How to use
 First install requirements.txt </br>
@@ -17,7 +20,8 @@ python3 main.py
 # Bot Commands
 
 ### Reload ###
-Refresh the data. (***Needed after starting the bot***)
+Refresh the data. (***Needed after starting the bot***) </br?
+And save ussers usage to google sheet.
 
 ### All 
 Returns all user info that has been sorted by their data transfer

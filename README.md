@@ -20,7 +20,7 @@ python3 main.py
 # Bot Commands
 
 ### Reload ###
-Refresh the data. (***Needed after starting the bot***) </br?
+Refresh the data. (***Needed after starting the bot***) </br>
 And save ussers usage to google sheet.
 
 ### All 

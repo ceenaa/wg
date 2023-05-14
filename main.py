@@ -161,4 +161,4 @@ def send_npk(message):
 
 
 analysis.import_req()
-bot.polling()
+bot.polling(True)

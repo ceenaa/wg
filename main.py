@@ -161,4 +161,4 @@ def send_npk(message):
 
 
 analysis.import_req()
-bot.polling(True)
+bot.infinity_polling(timeout=10, long_polling_timeout = 5)

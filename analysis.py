@@ -45,8 +45,8 @@ def totalDays():
 
 
 def loadNameToAddress():
-    file = open("/etc/wireguard/wg0.conf", "r")
-    # file = open("test.conf", "r")
+    # file = open("/etc/wireguard/wg0.conf", "r")
+    file = open("test.conf", "r")
     lines = file.readlines()
     for i in range(13, len(lines), 6):
         name = lines[i]
@@ -73,10 +73,10 @@ def import_req():
 
 
 def reload():
-    file = open("res.txt", "w")
-    wg = subprocess.check_output("wg", shell=True)
-    file.write(wg.decode("utf-8"))
-    file.close()
+    # file = open("res.txt", "w")
+    # wg = subprocess.check_output("wg", shell=True)
+    # file.write(wg.decode("utf-8"))
+    # file.close()
 
     file = open("res.txt", "r")
     lines = file.readlines()
@@ -94,11 +94,11 @@ def reload():
     for i in range(5, len(lines), 7):
         if i + 5 >= len(lines):
             break
+        if 'allowed' in lines[i + 2]:
+            break
         transfer = lines[i + 5].split(" ")
         if len(transfer) < 3 or transfer[2] != "transfer:":
             continue
-        if 'allowed ips' in lines[i + 2]:
-            break
         address = lines[i + 3]
         address = address.split(": ")[1]
         address = address.strip()

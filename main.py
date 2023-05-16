@@ -129,17 +129,11 @@ def send_total_days(message):
 
 
 def user_request(message):
-    t = message.text[0]
-    t = t.lower()
-    t += message.text[1:]
-    return t in analysis.peerMap.keys()
+    return message.text in analysis.peerMap.keys()
 
 
 @bot.message_handler(func=user_request)
 def send_npk(message):
-    t = message.text[0]
-    t = t.lower()
-    t += message.text[1:]
     cid = message.chat.id
     message_text = message.text
     try:

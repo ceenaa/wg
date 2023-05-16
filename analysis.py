@@ -11,13 +11,13 @@ confName = os.environ.get("CONF_NAME")
 global total, count, maxUsage, maxPeer, sortedPeer
 peerMap = {}
 startTime = date(2023, 4, 19)
-cache_users = db.r.smembers("users")
+cache_address = db.r.smembers("users")
 
-for user in cache_users:
-    cached_address = db.r.hget(user, "address")
-    cached_name = db.r.hget(user, "name")
-    cached_last_handshake = db.r.hget(user, "last_handshake")
-    cached_transfer = db.r.hget(user, "transfer")
+for ad in cache_address:
+    cached_address = db.r.hget(ad, "address")
+    cached_name = db.r.hget(ad, "name")
+    cached_last_handshake = db.r.hget(ad, "last_handshake")
+    cached_transfer = db.r.hget(ad, "transfer")
     if cached_transfer is None:
         cached_transfer = 0
     cached_transfer = float(cached_transfer)
@@ -131,11 +131,9 @@ def export():
 
 
 def set_transferToZero(name):
-    db.r.hset(name, "transfer", 0)
     peerMap[name].transfer = 0
     global sortedPeer
     sortedPeer = sorted(peerMap.values(), key=lambda peer: peer.transfer, reverse=True)
-    export()
 
 
 def pause_user(name):

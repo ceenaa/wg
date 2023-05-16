@@ -15,7 +15,7 @@ def cache_names():
         address = address.split(" = ")[1]
         address = address.strip()
         r.hset(address, "name", name)
-        r.sadd("users", name)
+        r.sadd("users", address)
 
 
 def cache_last_records():

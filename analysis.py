@@ -14,7 +14,7 @@ startTime = date(2023, 4, 19)
 cache_address = db.r.smembers("users")
 
 for ad in cache_address:
-    cached_address = db.r.hget(ad, "address")
+    cached_address = ad
     cached_name = db.r.hget(ad, "name")
     cached_last_handshake = db.r.hget(ad, "last_handshake")
     cached_transfer = db.r.hget(ad, "transfer")

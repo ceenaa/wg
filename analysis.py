@@ -164,7 +164,7 @@ def pause_user(name):
     cached_peerMap = copy.copy(peerMap)
 
 
-def unpause_user(name):
+def resume_user(name):
     file = open("/etc/wireguard/wg0.conf", "r")
     lines = file.readlines()
     file.close()
@@ -172,7 +172,7 @@ def unpause_user(name):
         n = lines[i].split(" ")[1]
         if n == name:
             if lines[i][0] != "#":
-                raise Exception("User already unpaused")
+                raise Exception("User already resumed")
             lines[i + 1] = lines[i + 1][1:]
             lines[i + 2] = lines[i + 2][1:]
             lines[i + 3] = lines[i + 3][1:]

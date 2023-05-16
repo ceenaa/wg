@@ -130,7 +130,7 @@ def send_total_days(message):
 
 def user_request(message):
     t = message.text[0]
-    t = t.lowwer()
+    t = t.lower()
     t += message.text[1:]
     return t in analysis.peerMap.keys()
 

@@ -8,8 +8,9 @@ import models
 load_dotenv()
 confName = os.environ.get("CONF_NAME")
 
-global total, count, maxUsage, maxPeer, sortedPeer
+global total, count, maxUsage, maxPeer
 peerMap = {}
+sortedPeer = []
 cached_peerMap = {}
 startTime = date(2023, 4, 19)
 cache_address = db.r.smembers("users")

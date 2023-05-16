@@ -112,16 +112,13 @@ def reload():
             transfer += float(sent)
 
         name = db.r.hget(address, "name")
-
+        total += transfer
         if peerMap.get(name) is not None:
             peerMap[name].increaseTransfer(transfer)
             peerMap[name].last_handshake = last_handshake
         else:
             p = models.peer(name, address, last_handshake, transfer)
             peerMap[name] = p
-
-        transfer = peerMap[name].transfer
-        total += transfer
 
     peers = peerMap.values()
     sortedPeer = sorted(peers, key=lambda peer: peer.transfer, reverse=True)
@@ -150,7 +147,7 @@ def pause_user(name):
     for i in range(13, len(lines), 6):
         n = lines[i].split(" ")[1]
         if n == name:
-            if lines[i+1][0] == "#":
+            if lines[i + 1][0] == "#":
                 raise Exception("User already paused")
             lines[i + 1] = "#" + lines[i + 1]
             lines[i + 2] = "#" + lines[i + 2]

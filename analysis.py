@@ -142,7 +142,7 @@ def pause_user(name):
     for i in range(13, len(lines), 6):
         n = lines[i].split(" ")[1]
         if n == name:
-            if lines[i][0] == "#":
+            if lines[i+1][0] == "#":
                 raise Exception("User already paused")
             lines[i + 1] = "#" + lines[i + 1]
             lines[i + 2] = "#" + lines[i + 2]

@@ -61,13 +61,13 @@ def reload():
     lines = file.readlines()
     file.close()
 
-    global total, count, maxUsage, maxPeer, sortedPeer, peerMap
+    global total, count, maxUsage, maxPeer, sortedPeer, peerMap, cached_peerMap
 
     total = 0
     count = 0
     maxUsage = 0
     maxPeer = None
-    sortedPeer = []
+    sortedPeer = None
     peerMap = {}
 
     for i in range(5, len(lines), 7):

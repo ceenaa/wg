@@ -14,6 +14,7 @@ peerMap = {}
 sortedPeer = []
 cached_peerMap = {}
 startTime = date(2023, 4, 19)
+cached_total = 0
 cache_address = db.r.smembers("users")
 
 for ad in cache_address:
@@ -24,6 +25,7 @@ for ad in cache_address:
     if cached_transfer is None:
         cached_transfer = 0
     cached_transfer = float(cached_transfer)
+    cached_total += float(cached_transfer)
     cached_peer = models.peer(cached_name, cached_address, cached_last_handshake, cached_transfer)
     cached_peerMap[cached_name] = cached_peer
 
@@ -54,23 +56,25 @@ def totalDays():
 
 
 def reload():
-    file = open("res.txt", "w")
-    wg = subprocess.check_output("wg", shell=True)
-    file.write(wg.decode("utf-8"))
-    file.close()
+    # file = open("res.txt", "w")
+    # wg = subprocess.check_output("wg", shell=True)
+    # file.write(wg.decode("utf-8"))
+    # file.close()
 
     file = open("res.txt", "r")
     lines = file.readlines()
     file.close()
 
-    global total, count, maxUsage, maxPeer, sortedPeer, peerMap, cached_peerMap
+    global total, count, maxUsage, maxPeer, sortedPeer, peerMap, cached_peerMap, cached_total
 
     total = 0
+    total += cached_total
     count = 0
     maxUsage = 0
     maxPeer = None
     sortedPeer = []
     peerMap = {}
+    peerMap = copy.copy(cached_peerMap)
 
     for i in range(5, len(lines), 7):
         if i + 5 >= len(lines):
@@ -109,10 +113,8 @@ def reload():
 
         name = db.r.hget(address, "name")
 
-        if cached_peerMap.get(name) is not None:
-            p = copy.copy(cached_peerMap[name])
-            p.increaseTransfer(transfer)
-            peerMap[name] = p
+        if peerMap.get(name) is not None:
+            peerMap[name].increaseTransfer(transfer)
             peerMap[name].last_handshake = last_handshake
         else:
             p = models.peer(name, address, last_handshake, transfer)

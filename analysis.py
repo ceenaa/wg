@@ -4,6 +4,7 @@ from datetime import date
 from dotenv import load_dotenv
 import db
 import models
+import copy
 
 load_dotenv()
 confName = os.environ.get("CONF_NAME")
@@ -109,8 +110,9 @@ def reload():
         name = db.r.hget(address, "name")
 
         if cached_peerMap.get(name) is not None:
-            peerMap[name] = cached_peerMap[name]
-            peerMap[name].increaseTransfer(transfer)
+            p = copy.copy(cached_peerMap[name])
+            p.increaseTransfer(transfer)
+            peerMap[name] = p
             peerMap[name].last_handshake = last_handshake
         else:
             p = models.peer(name, address, last_handshake, transfer)

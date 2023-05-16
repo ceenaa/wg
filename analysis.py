@@ -18,6 +18,8 @@ for user in cache_users:
     cached_name = db.r.hget(user, "name")
     cached_last_handshake = db.r.hget(user, "last_handshake")
     cached_transfer = db.r.hget(user, "transfer")
+    if cached_transfer is None:
+        cached_transfer = 0
     cached_transfer = float(cached_transfer)
     cached_peer = models.peer(cached_name, cached_address, cached_last_handshake, cached_transfer)
     peerMap[cached_name] = cached_peer

@@ -68,8 +68,8 @@ def reload():
     count = 0
     maxUsage = 0
     maxPeer = None
-    sortedPeer = sortedPeer.clear()
-    peerMap = peerMap.clear()
+    sortedPeer = []
+    peerMap = {}
 
     for i in range(5, len(lines), 7):
         if i + 5 >= len(lines):

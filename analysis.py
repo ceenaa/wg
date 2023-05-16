@@ -161,8 +161,9 @@ def pause_user(name):
     export()
     os.system("sudo systemctl restart wg-quick@wg0.service")
     db.cache_last_records()
-    global cached_peerMap
+    global cached_peerMap, cached_total
     cached_peerMap = copy.copy(peerMap)
+    cached_total = total
 
 
 def resume_user(name):
@@ -187,5 +188,6 @@ def resume_user(name):
     export()
     os.system("sudo systemctl restart wg-quick@wg0.service")
     db.cache_last_records()
-    global cached_peerMap
+    global cached_peerMap, cached_total
     cached_peerMap = copy.copy(peerMap)
+    cached_total = total

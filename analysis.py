@@ -10,6 +10,7 @@ confName = os.environ.get("CONF_NAME")
 
 global total, count, maxUsage, maxPeer, sortedPeer
 peerMap = {}
+cached_peerMap = {}
 startTime = date(2023, 4, 19)
 cache_address = db.r.smembers("users")
 
@@ -22,7 +23,7 @@ for ad in cache_address:
         cached_transfer = 0
     cached_transfer = float(cached_transfer)
     cached_peer = models.peer(cached_name, cached_address, cached_last_handshake, cached_transfer)
-    peerMap[cached_name] = cached_peer
+    cached_peerMap[cached_name] = cached_peer
 
 
 def MibToGiB(mib):
@@ -105,7 +106,8 @@ def reload():
 
         name = db.r.hget(address, "name")
 
-        if peerMap.get(name) is not None:
+        if cached_peerMap.get(name) is not None:
+            peerMap[name] = cached_peerMap[name]
             peerMap[name].increaseTransfer(transfer)
             peerMap[name].last_handshake = last_handshake
         else:

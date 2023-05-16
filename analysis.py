@@ -184,6 +184,6 @@ def unpause_user(name):
     set_transferToZero(name)
     export()
     os.system("sudo systemctl restart wg-quick@wg0.service")
-    db.r.cache_last_records()
+    db.cache_last_records()
     global cached_peerMap
     cached_peerMap = copy.copy(peerMap)

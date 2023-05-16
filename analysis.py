@@ -67,7 +67,6 @@ def reload():
     maxUsage = 0
     maxPeer = None
     sortedPeer = []
-    peerMap = {}
 
     for i in range(5, len(lines), 7):
         if i + 5 >= len(lines):
@@ -106,7 +105,7 @@ def reload():
 
         name = db.r.hget(address, "name")
 
-        if name in peerMap:
+        if peerMap.get(name) is not None:
             peerMap[name].increaseTransfer(transfer)
             peerMap[name].last_handshake = last_handshake
         else:

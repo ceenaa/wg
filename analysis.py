@@ -161,6 +161,8 @@ def pause_user(name):
     export()
     os.system("sudo systemctl restart wg-quick@wg0.service")
     db.cache_last_records()
+    global cached_peerMap
+    cached_peerMap = copy.copy(peerMap)
 
 
 def unpause_user(name):
@@ -184,3 +186,5 @@ def unpause_user(name):
     export()
     os.system("sudo systemctl restart wg-quick@wg0.service")
     db.r.cache_last_records()
+    global cached_peerMap
+    cached_peerMap = copy.copy(peerMap)

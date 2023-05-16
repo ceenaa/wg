@@ -20,8 +20,8 @@ def cache_names():
 
 def cache_last_records():
     file = open("peers.txt", "r")
-    file.close()
     lines = file.readlines()
+    file.close()
     for i in range(0, len(lines), 4):
         address = lines[i + 1].strip()
         last_handshake = lines[i + 2].strip()

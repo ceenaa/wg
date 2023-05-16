@@ -137,6 +137,9 @@ def user_request(message):
 
 @bot.message_handler(func=user_request)
 def send_npk(message):
+    t = message.text[0]
+    t = t.lower()
+    t += message.text[1:]
     cid = message.chat.id
     message_text = message.text
     try:

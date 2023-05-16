@@ -1,22 +1,26 @@
-from datetime import date
-
-from dotenv import load_dotenv
-
-import models
 import os
 import subprocess
+from datetime import date
+from dotenv import load_dotenv
+import db
+import models
 
 load_dotenv()
 confName = os.environ.get("CONF_NAME")
 
-global total, count, maxUsage, maxPeer, sortedPeer, addressToName
-
-addressToName = {}
-lastTotal = 0
-lastPeerMap = {}
+global total, count, maxUsage, maxPeer, sortedPeer
 peerMap = {}
-
 startTime = date(2023, 4, 19)
+cache_users = db.r.smembers("users")
+
+for user in cache_users:
+    cached_address = db.r.hget(user, "address")
+    cached_name = db.r.hget(user, "name")
+    cached_last_handshake = db.r.hget(user, "last_handshake")
+    cached_transfer = db.r.hget(user, "transfer")
+    cached_transfer = float(cached_transfer)
+    cached_peer = models.peer(cached_name, cached_address, cached_last_handshake, cached_transfer)
+    peerMap[cached_name] = cached_peer
 
 
 def MibToGiB(mib):
@@ -42,34 +46,6 @@ def dailyAverage():
 def totalDays():
     nowTime = date.today()
     return (nowTime - startTime).days
-
-
-def loadNameToAddress():
-    file = open("/etc/wireguard/wg0.conf", "r")
-    # file = open("test.conf", "r")
-    lines = file.readlines()
-    for i in range(13, len(lines), 6):
-        name = lines[i]
-        name = name.split(" ")[1]
-        address = lines[i + 3]
-        address = address.split(" = ")[1]
-        address = address.strip()
-        addressToName[address] = name
-
-
-def import_req():
-    file = open("peers.txt", "r")
-    lines = file.readlines()
-    global lastTotal, lastPeerMap
-    for i in range(0, len(lines), 4):
-        name = lines[i].strip()
-        address = lines[i + 1].strip()
-        name = addressToName[address]
-        last_handshake = lines[i + 2].strip()
-        transfer = float(lines[i + 3].strip())
-        lastTotal += transfer
-        lastPeerMap[name] = models.peer(name, address, last_handshake, transfer)
-    file.close()
 
 
 def reload():
@@ -126,26 +102,80 @@ def reload():
         elif sent_type == "GiB":
             transfer += float(sent)
 
-        name = addressToName[address]
-        p = models.peer(name, address, last_handshake, transfer)
-        peerMap[name] = p
+        name = db.r.hget(address, "name")
+
+        if name in peerMap:
+            peerMap[name].increaseTransfer(transfer)
+            peerMap[name].last_handshake = last_handshake
+        else:
+            p = models.peer(name, address, last_handshake, transfer)
+            peerMap[name] = p
+
+        transfer = peerMap[name].transfer
         total += transfer
 
-    for p in peerMap.keys():
-        if p in lastPeerMap.keys():
-            peerMap[p].increaseTransfer(lastPeerMap[p].transfer)
-    for p in lastPeerMap.keys():
-        if p not in peerMap.keys():
-            peerMap[p] = lastPeerMap[p]
-
     peers = peerMap.values()
-    total += lastTotal
-    total = total
-
     sortedPeer = sorted(peers, key=lambda peer: peer.transfer, reverse=True)
     maxPeer = sortedPeer[0]
     maxUsage = maxPeer.transfer
     count = len(sortedPeer)
 
 
-loadNameToAddress()
+def export():
+    file = open("peers.txt", "w")
+    for peer in sortedPeer:
+        file.write(str(peer) + "\n")
+    file.close()
+
+
+def set_transferToZero(name):
+    db.r.hset(name, "transfer", 0)
+    peerMap[name].transfer = 0
+    global sortedPeer
+    sortedPeer = sorted(peerMap.values(), key=lambda peer: peer.transfer, reverse=True)
+    export()
+
+
+def pause_user(name):
+    file = open("/etc/wireguard/wg0.conf", "r")
+    lines = file.readlines()
+    file.close()
+    for i in range(13, len(lines), 6):
+        n = lines[i].split(" ")[1]
+        if n == name:
+            if lines[i][0] == "#":
+                raise Exception("User already paused")
+            lines[i + 1] = "#" + lines[i + 1]
+            lines[i + 2] = "#" + lines[i + 2]
+            lines[i + 3] = "#" + lines[i + 3]
+            lines[i + 4] = "#" + lines[i + 4]
+            break
+    file = open("/etc/wireguard/wg0.conf", "w")
+    file.writelines(lines)
+    file.close()
+    export()
+    os.system("sudo systemctl restart wg-quick@wg0.service")
+    db.cache_last_records()
+
+
+def unpause_user(name):
+    file = open("/etc/wireguard/wg0.conf", "r")
+    lines = file.readlines()
+    file.close()
+    for i in range(13, len(lines), 6):
+        n = lines[i].split(" ")[1]
+        if n == name:
+            if lines[i][0] != "#":
+                raise Exception("User already unpaused")
+            lines[i + 1] = lines[i + 1][1:]
+            lines[i + 2] = lines[i + 2][1:]
+            lines[i + 3] = lines[i + 3][1:]
+            lines[i + 4] = lines[i + 4][1:]
+            break
+    file = open("/etc/wireguard/wg0.conf", "w")
+    file.writelines(lines)
+    file.close()
+    set_transferToZero(name)
+    export()
+    os.system("sudo systemctl restart wg-quick@wg0.service")
+    db.r.cache_last_records()

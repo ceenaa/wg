@@ -16,8 +16,8 @@ def total_request(message):
 def send_total(message):
     try:
         bot.send_message(message.chat.id, f"{round(analysis.total, 2)} Gib")
-    except:
-        bot.send_message(message.chat.id, "Reload needed!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
 def average_request(message):
@@ -28,8 +28,8 @@ def average_request(message):
 def send_average(message):
     try:
         bot.send_message(message.chat.id, analysis.calcAverage())
-    except:
-        bot.send_message(message.chat.id, "Reload needed!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
 def all_request(message):
@@ -49,8 +49,8 @@ def send_all(message):
                 s = ""
         if s != "":
             bot.send_message(message.chat.id, s)
-    except:
-        bot.send_message(message.chat.id, "Reload needed!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
 def count_request(message):
@@ -61,8 +61,8 @@ def count_request(message):
 def send_count(message):
     try:
         bot.send_message(message.chat.id, analysis.count)
-    except:
-        bot.send_message(message.chat.id, "Reload needed!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
 def max_request(message):
@@ -73,8 +73,8 @@ def max_request(message):
 def send_max(message):
     try:
         bot.send_message(message.chat.id, str(analysis.maxPeer))
-    except:
-        bot.send_message(message.chat.id, "Reload needed!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
 def max_request(message):
@@ -87,8 +87,8 @@ def send_max(message):
         analysis.reload()
         sheet.main()
         bot.send_message(message.chat.id, "Reloaded!")
-    except:
-        bot.send_message(message.chat.id, "Error")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
 def daily_average_request(message):
@@ -99,8 +99,8 @@ def daily_average_request(message):
 def send_daily_average(message):
     try:
         bot.send_message(message.chat.id, f"{round(analysis.dailyAverage(), 2)} Gib")
-    except:
-        bot.send_message(message.chat.id, "Reload needed!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
 def total_days_request(message):
@@ -114,33 +114,18 @@ def export_request(message):
 @bot.message_handler(func=export_request)
 def send_export(message):
     try:
-        file = open("peers.txt", "w")
-        for peer in analysis.sortedPeer:
-            file.write(str(peer) + "\n")
+        analysis.export()
         bot.send_message(message.chat.id, "Exported!")
-        file.close()
-    except:
-        bot.send_message(message.chat.id, "Reload needed!")
-
-
-def inport_request(message):
-    return message.text == "Import"
-
-
-@bot.message_handler(func=inport_request)
-def send_import(message):
-    try:
-        bot.send_message(message.chat.id, "Imported!")
-    except:
-        bot.send_message(message.chat.id, "Reload needed!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
 @bot.message_handler(func=total_days_request)
 def send_total_days(message):
     try:
         bot.send_message(message.chat.id, analysis.totalDays())
-    except:
-        bot.send_message(message.chat.id, "Reload needed!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
 def user_request(message):
@@ -154,11 +139,42 @@ def send_npk(message):
     if message_text in analysis.peerMap:
         try:
             bot.send_message(cid, analysis.peerMap[message_text])
-        except:
-            bot.send_message(message.chat.id, "Reload needed!")
+        except Exception as err:
+            bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
     else:
         bot.send_message(cid, "Invalid command!")
 
 
-analysis.import_req()
-bot.infinity_polling(timeout=10, long_polling_timeout = 5)
+def pause_request(message):
+    p = message.text.split(" ")[0]
+    name = message.text.split(" ")[1]
+    return p == "Pause" and name in analysis.peerMap.keys()
+
+
+@bot.message_handler(func=pause_request)
+def send_pause(message):
+    try:
+        name = message.text.split(" ")[1]
+        analysis.pause_user(name)
+        bot.send_message(message.chat.id, "Paused!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+
+
+def unpause_request(message):
+    p = message.text.split(" ")[0]
+    name = message.text.split(" ")[1]
+    return p == "Unpause" and name in analysis.peerMap.keys()
+
+
+@bot.message_handler(func=unpause_request)
+def send_unpause(message):
+    try:
+        name = message.text.split(" ")[1]
+        analysis.unpause_user(name)
+        bot.send_message(message.chat.id, "Unpaused!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+
+
+bot.infinity_polling(timeout=10, long_polling_timeout=5)

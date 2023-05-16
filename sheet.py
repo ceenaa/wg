@@ -32,4 +32,4 @@ def main():
         'values': users
     }
 
-    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet2!A2", body=body, valueInputOption="USER_ENTERED").execute()
+    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="temp & 3pk!A2", body=body, valueInputOption="USER_ENTERED").execute()

@@ -173,7 +173,7 @@ def resume_user(name):
     for i in range(13, len(lines), 6):
         n = lines[i].split(" ")[1]
         if n == name:
-            if not lines[i][0] == "#":
+            if lines[i+1][0] != "#":
                 raise Exception("User already resumed")
             lines[i + 1] = lines[i + 1][1:]
             lines[i + 2] = lines[i + 2][1:]

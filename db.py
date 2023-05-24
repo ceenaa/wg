@@ -1,10 +1,13 @@
 import sqlite3
 
-conn = sqlite3.connect('users.db', check_same_thread=False)
-c = conn.cursor()
+
+def connect():
+    conn = sqlite3.connect("peers.db")
+    return conn
 
 
-def create_table():
+def create_table(conn):
+    c = conn.cursor()
     c.execute("""CREATE TABLE users (
                 name text,
                 address text primary key not null unique,
@@ -13,9 +16,22 @@ def create_table():
                 )""")
 
 
-def load_all_peers():
-    # file = open("/etc/wireguard/wg1.conf", "r")
-    file = open("test.conf", "r")
+def get_all(conn):
+    c = conn.cursor()
+    c.execute("SELECT * FROM users")
+    return c.fetchall()
+
+
+def get_user(conn, address):
+    c = conn.cursor()
+    c.execute("SELECT * FROM users WHERE address = ?", (address,))
+    return c.fetchone()
+
+
+def load_all_peers(conn):
+    c = conn.cursor()
+    file = open("/etc/wireguard/wg1.conf", "r")
+    # file = open("test.conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
@@ -30,7 +46,8 @@ def load_all_peers():
                   (name, address, last_handshake, transfer))
 
 
-def load_lastRecords():
+def load_lastRecords(conn):
+    c = conn.cursor()
     file = open("peers.txt", "r")
     lines = file.readlines()
     file.close()
@@ -43,8 +60,8 @@ def load_lastRecords():
                   (name, address, last_handshake, transfer))
 
 
-def write_to_db(peers):
+def write_to_db(peers, conn):
+    c = conn.cursor()
     for peer in peers:
         c.execute("UPDATE users SET last_handshake = ? , transfer = ? WHERE name = ?",
                   (peer.last_handshake, peer.transfer, peer.name))
-

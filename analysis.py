@@ -70,10 +70,13 @@ def reload():
             address = lines[i + 3]
             address = address.split(": ")[1]
             address = address.strip()
-            name = db.c.execute("SELECT name FROM users WHERE address = ?", (address,)).fetchone()
-            if name is None:
+            connection = db.connect()
+            user = db.get_user(address, connection)
+            connection.commit()
+            connection.close()
+            if user is None:
                 continue
-            name = name[0]
+            name = user[0]
             last_handshake = lines[i + 4].split(': ')[1].strip()
             received = transfer[3]
             received_type = transfer[4]
@@ -99,8 +102,10 @@ def reload():
 
             total += transfer
 
-            db.c.execute("SELECT * FROM users WHERE name = ?", (name,))
-            user = db.c.fetchone()
+            connection = db.connect()
+            user = db.get_user(address, connection)
+            connection.commit()
+            connection.close()
             p = models.peer(name, address, user[2], user[3])
             p.increaseTransfer(transfer)
             p.last_handshake = last_handshake
@@ -108,7 +113,10 @@ def reload():
             total += p.transfer
             i += 7
 
-    peers = db.c.execute("SELECT * FROM users").fetchall()
+    connection = db.connect()
+    peers = db.get_all(connection)
+    connection.commit()
+    connection.close()
     for user in peers:
         if user[0] not in peerMap:
             p = models.peer(user[0], user[1], user[2], user[3])
@@ -124,8 +132,10 @@ def export():
     reload()
     db.write_to_db(sortedPeer)
     file = open("res.txt", "w")
-    db.c.execute("SELECT * FROM users")
-    users = db.c.fetchall()
+    conn = db.connect()
+    users = db.get_all(conn)
+    conn.commit()
+    conn.close()
     for user in users:
         file.write(f"{user[0]}\n{user[1]}\n{user[2]}\n{user[3]}\n")
 
@@ -154,7 +164,8 @@ def pause_user(name):
     file.writelines(lines)
     file.close()
     reload()
-    db.write_to_db(sortedPeer)
+    connection = db.connect()
+    db.write_to_db(sortedPeer, connection)
     os.system("sudo systemctl restart wg-quick@wg1.service")
 
 
@@ -177,5 +188,8 @@ def resume_user(name):
     file.close()
     reload()
     set_transferToZero(name)
-    db.write_to_db(sortedPeer)
+    connection = db.connect()
+    db.write_to_db(sortedPeer, connection)
+    connection.commit()
+    connection.close()
     os.system("sudo systemctl restart wg-quick@wg1.service")

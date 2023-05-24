@@ -60,7 +60,7 @@ def load_lastRecords(conn):
                   (name, address, last_handshake, transfer))
 
 
-def write_to_db(peers, conn):
+def write_to_db(conn, peers):
     c = conn.cursor()
     for peer in peers:
         c.execute("UPDATE users SET last_handshake = ? , transfer = ? WHERE name = ?",

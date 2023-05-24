@@ -130,12 +130,13 @@ def reload():
 
 def export():
     reload()
-    db.write_to_db(sortedPeer)
+    connection = db.connect()
+    db.write_to_db(connection, sortedPeer)
+    users = db.get_all(connection)
+    connection.commit()
+    connection.close()
+
     file = open("res.txt", "w")
-    conn = db.connect()
-    users = db.get_all(conn)
-    conn.commit()
-    conn.close()
     for user in users:
         file.write(f"{user[0]}\n{user[1]}\n{user[2]}\n{user[3]}\n")
 
@@ -165,7 +166,7 @@ def pause_user(name):
     file.close()
     reload()
     connection = db.connect()
-    db.write_to_db(sortedPeer, connection)
+    db.write_to_db(connection, sortedPeer)
     os.system("sudo systemctl restart wg-quick@wg1.service")
 
 
@@ -189,7 +190,7 @@ def resume_user(name):
     reload()
     set_transferToZero(name)
     connection = db.connect()
-    db.write_to_db(sortedPeer, connection)
+    db.write_to_db(connection, sortedPeer)
     connection.commit()
     connection.close()
     os.system("sudo systemctl restart wg-quick@wg1.service")

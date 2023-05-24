@@ -10,7 +10,6 @@ def main():
     SERVICE_ACCOUNT_FILE = 'keys.json'
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-    creds = None
     creds = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
@@ -22,11 +21,13 @@ def main():
     # Call the Sheets API
     sheet = service.spreadsheets()
 
-    peers = analysis.sortedPeer
+    users = []
+    for p in analysis.sortedPeer:
+        users.append([p.name, p.transfer])
 
     body = {
-        'values': peers
+        'values': users
     }
 
-    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet3!A2", body=body,
-                                   valueInputOption="USER_ENTERED").execute()
+    sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="mx!A2", body=body,
+                          valueInputOption="USER_ENTERED").execute()

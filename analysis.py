@@ -13,6 +13,7 @@ peerMap = {}
 sortedPeer = []
 startTime = date(2023, 4, 19)
 
+
 def MibToGiB(mib):
     return mib / 1024
 
@@ -57,52 +58,55 @@ def reload():
     sortedPeer = []
     peerMap = {}
 
-    for i in range(5, len(lines), 7):
-        if i + 5 >= len(lines):
-            break
+    i = 5
+    while i < len(lines) - 1:
         if 'allowed' in lines[i + 2]:
-            break
-        transfer = lines[i + 5].split(" ")
-        if len(transfer) < 3 or transfer[2] != "transfer:":
-            continue
-        address = lines[i + 3]
-        address = address.split(": ")[1]
-        address = address.strip()
-        name = db.c.execute("SELECT name FROM users WHERE address = ?", (address,)).fetchone()[0]
-        if name is None:
-            continue
-        last_handshake = lines[i + 4].split(": ")[1].strip()
-        received = transfer[3]
-        received_type = transfer[4]
+            i += 4
+        elif 'interface' in lines[i]:
+            i += 5
+        else:
 
-        sent = transfer[6]
-        sent_type = transfer[7]
+            transfer = lines[i + 5].split(" ")
+            address = lines[i + 3]
+            address = address.split(": ")[1]
+            address = address.strip()
+            name = db.c.execute("SELECT name FROM users WHERE address = ?", (address,)).fetchone()
+            if name is None:
+                continue
+            name = name[0]
+            last_handshake = lines[i + 4].split(': ')[1].strip()
+            received = transfer[3]
+            received_type = transfer[4]
 
-        transfer = 0
+            sent = transfer[6]
+            sent_type = transfer[7]
 
-        if received_type == "MiB":
-            transfer += MibToGiB(float(received))
-        elif received_type == "KiB":
-            transfer += kibToGiB(float(received))
-        elif received_type == "GiB":
-            transfer += float(received)
+            transfer = 0
 
-        if sent_type == "MiB":
-            transfer += MibToGiB(float(sent))
-        elif sent_type == "KiB":
-            transfer += kibToGiB(float(sent))
-        elif sent_type == "GiB":
-            transfer += float(sent)
+            if received_type == "MiB":
+                transfer += MibToGiB(float(received))
+            elif received_type == "KiB":
+                transfer += kibToGiB(float(received))
+            elif received_type == "GiB":
+                transfer += float(received)
 
-        total += transfer
+            if sent_type == "MiB":
+                transfer += MibToGiB(float(sent))
+            elif sent_type == "KiB":
+                transfer += kibToGiB(float(sent))
+            elif sent_type == "GiB":
+                transfer += float(sent)
 
-        db.c.execute("SELECT * FROM users WHERE name = ?", (name,))
-        user = db.c.fetchone()
-        p = models.peer(name, address, user[2], user[3])
-        p.increaseTransfer(transfer)
-        p.last_handshake = last_handshake
-        peerMap[name] = p
-        total += p.transfer
+            total += transfer
+
+            db.c.execute("SELECT * FROM users WHERE name = ?", (name,))
+            user = db.c.fetchone()
+            p = models.peer(name, address, user[2], user[3])
+            p.increaseTransfer(transfer)
+            p.last_handshake = last_handshake
+            peerMap[name] = p
+            total += p.transfer
+            i += 7
 
     peers = db.c.execute("SELECT * FROM users").fetchall()
     for user in peers:

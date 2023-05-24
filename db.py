@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect('users.db')
+conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
 
 
@@ -14,8 +14,8 @@ def create_table():
 
 
 def load_all_peers():
-    file = open("/etc/wireguard/wg1.conf", "r")
-    # file = open("test.conf", "r")
+    # file = open("/etc/wireguard/wg1.conf", "r")
+    file = open("test.conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):

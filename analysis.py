@@ -75,6 +75,7 @@ def reload():
             connection.commit()
             connection.close()
             if user is None:
+                i += 7
                 continue
             name = user[0]
             last_handshake = lines[i + 4].split(': ')[1].strip()

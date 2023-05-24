@@ -40,10 +40,10 @@ def totalDays():
 
 
 def reload():
-    file = open("res.txt", "w")
-    wg = subprocess.check_output("wg", shell=True)
-    file.write(wg.decode("utf-8"))
-    file.close()
+    # file = open("res.txt", "w")
+    # wg = subprocess.check_output("wg", shell=True)
+    # file.write(wg.decode("utf-8"))
+    # file.close()
 
     file = open("res.txt", "r")
     lines = file.readlines()
@@ -103,7 +103,7 @@ def reload():
             total += transfer
 
             connection = db.connect()
-            user = db.get_user(address, connection)
+            user = db.get_user(connection, address)
             connection.commit()
             connection.close()
             p = models.peer(name, address, user[2], user[3])

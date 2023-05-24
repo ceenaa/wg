@@ -26,7 +26,6 @@ def load_all_peers():
         address = address.strip()
         transfer = 0
         last_handshake = "None"
-        c = conn.cursor()
         c.execute("INSERT OR REPLACE INTO users VALUES(? ,? ,? ,?)",
                   (name, address, last_handshake, transfer))
 
@@ -40,17 +39,12 @@ def load_lastRecords():
         address = lines[i + 1].strip()
         last_handshake = lines[i + 2].strip()
         transfer = float(lines[i + 3].strip())
-        c = conn.cursor()
         c.execute("INSERT OR REPLACE INTO users VALUES (? ,? ,? ,?)",
                   (name, address, last_handshake, transfer))
 
 
 def write_to_db(peers):
     for peer in peers:
-        c = conn.cursor()
         c.execute("UPDATE users SET last_handshake = ? , transfer = ? WHERE name = ?",
                   (peer.last_handshake, peer.transfer, peer.name))
 
-
-conn.commit()
-conn.close()

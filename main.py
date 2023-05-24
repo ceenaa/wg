@@ -2,6 +2,7 @@ import analysis
 import os
 import telebot
 
+import db
 import sheet
 
 API_KEY = os.getenv("API_KEY")
@@ -175,3 +176,5 @@ def send_unpause(message):
 
 
 bot.infinity_polling(timeout=10, long_polling_timeout=5)
+db.conn.commit()
+db.conn.close()

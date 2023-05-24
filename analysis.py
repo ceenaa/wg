@@ -20,6 +20,8 @@ cache_address = db.r.smembers("users")
 for ad in cache_address:
     cached_address = ad
     cached_name = db.r.hget(ad, "name")
+    if "sina" in cached_name:
+        continue
     cached_last_handshake = db.r.hget(ad, "last_handshake")
     cached_transfer = db.r.hget(ad, "transfer")
     if cached_transfer is None:
@@ -87,7 +89,9 @@ def reload():
         address = lines[i + 3]
         address = address.split(": ")[1]
         address = address.strip()
-
+        name = db.r.hget(address, "name")
+        if "sina" in name:
+            continue
         last_handshake = lines[i + 4].split(": ")[1].strip()
         received = transfer[3]
         received_type = transfer[4]
@@ -111,7 +115,6 @@ def reload():
         elif sent_type == "GiB":
             transfer += float(sent)
 
-        name = db.r.hget(address, "name")
         total += transfer
         if peerMap.get(name) is not None:
             peerMap[name].increaseTransfer(transfer)

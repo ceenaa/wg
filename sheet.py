@@ -25,11 +25,10 @@ def main():
 
     users = []
     for p in analysis.sortedPeer:
-        if not "sina" in p.name:
             users.append([p.name, p.transfer])
 
     body = {
         'values': users
     }
 
-    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="temp & 3pk!A2", body=body, valueInputOption="USER_ENTERED").execute()
+    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet3!A2", body=body, valueInputOption="USER_ENTERED").execute()

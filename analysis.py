@@ -40,10 +40,10 @@ def totalDays():
 
 
 def reload():
-    # file = open("res.txt", "w")
-    # wg = subprocess.check_output("wg", shell=True)
-    # file.write(wg.decode("utf-8"))
-    # file.close()
+    file = open("res.txt", "w")
+    wg = subprocess.check_output("wg", shell=True)
+    file.write(wg.decode("utf-8"))
+    file.close()
 
     file = open("res.txt", "r")
     lines = file.readlines()

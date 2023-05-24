@@ -71,7 +71,7 @@ def reload():
             address = address.split(": ")[1]
             address = address.strip()
             connection = db.connect()
-            user = db.get_user(address, connection)
+            user = db.get_user(connection, address)
             connection.commit()
             connection.close()
             if user is None:

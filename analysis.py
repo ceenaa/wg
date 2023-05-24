@@ -12,6 +12,7 @@ global total, count, maxUsage, maxPeer
 peerMap = {}
 sortedPeer = []
 startTime = date(2023, 4, 19)
+c = db.conn.cursor()
 
 
 def MibToGiB(mib):
@@ -69,7 +70,7 @@ def reload():
         address = lines[i + 3]
         address = address.split(": ")[1]
         address = address.strip()
-        name = db.c.execute("SELECT name FROM users WHERE address = ?", (address,)).fetchone()[0]
+        name = c.execute("SELECT name FROM users WHERE address = ?", (address,)).fetchone()[0]
         if name is None:
             continue
         last_handshake = lines[i + 4].split(": ")[1].strip()
@@ -97,15 +98,15 @@ def reload():
 
         total += transfer
 
-        db.c.execute("SELECT * FROM users WHERE name = ?", (name,))
-        user = db.c.fetchone()
+        c.execute("SELECT * FROM users WHERE name = ?", (name,))
+        user = c.fetchone()
         p = models.peer(name, address, user[2], user[3])
         p.increaseTransfer(transfer)
         p.last_handshake = last_handshake
         peerMap[name] = p
         total += p.transfer
 
-    peers = db.c.execute("SELECT * FROM users").fetchall()
+    peers = c.execute("SELECT * FROM users").fetchall()
     for user in peers:
         if user[0] not in peerMap:
             p = models.peer(user[0], user[1], user[2], user[3])
@@ -121,8 +122,8 @@ def export():
     reload()
     db.write_to_db(sortedPeer)
     file = open("res.txt", "w")
-    db.c.execute("SELECT * FROM users")
-    users = db.c.fetchall()
+    c.execute("SELECT * FROM users")
+    users = c.fetchall()
     for user in users:
         file.write(f"{user[0]}\n{user[1]}\n{user[2]}\n{user[3]}\n")
 

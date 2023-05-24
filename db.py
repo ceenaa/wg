@@ -30,8 +30,8 @@ def get_user(conn, address):
 
 def load_all_peers(conn):
     c = conn.cursor()
-    # file = open("/etc/wireguard/wg1.conf", "r")
-    file = open("test.conf", "r")
+    file = open("/etc/wireguard/wg1.conf", "r")
+    # file = open("test.conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):

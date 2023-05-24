@@ -12,8 +12,6 @@ global total, count, maxUsage, maxPeer
 peerMap = {}
 sortedPeer = []
 startTime = date(2023, 4, 19)
-c = db.conn.cursor()
-
 
 def MibToGiB(mib):
     return mib / 1024
@@ -70,7 +68,7 @@ def reload():
         address = lines[i + 3]
         address = address.split(": ")[1]
         address = address.strip()
-        name = c.execute("SELECT name FROM users WHERE address = ?", (address,)).fetchone()[0]
+        name = db.c.execute("SELECT name FROM users WHERE address = ?", (address,)).fetchone()[0]
         if name is None:
             continue
         last_handshake = lines[i + 4].split(": ")[1].strip()
@@ -98,15 +96,15 @@ def reload():
 
         total += transfer
 
-        c.execute("SELECT * FROM users WHERE name = ?", (name,))
-        user = c.fetchone()
+        db.c.execute("SELECT * FROM users WHERE name = ?", (name,))
+        user = db.c.fetchone()
         p = models.peer(name, address, user[2], user[3])
         p.increaseTransfer(transfer)
         p.last_handshake = last_handshake
         peerMap[name] = p
         total += p.transfer
 
-    peers = c.execute("SELECT * FROM users").fetchall()
+    peers = db.c.execute("SELECT * FROM users").fetchall()
     for user in peers:
         if user[0] not in peerMap:
             p = models.peer(user[0], user[1], user[2], user[3])
@@ -122,8 +120,8 @@ def export():
     reload()
     db.write_to_db(sortedPeer)
     file = open("res.txt", "w")
-    c.execute("SELECT * FROM users")
-    users = c.fetchall()
+    db.c.execute("SELECT * FROM users")
+    users = db.c.fetchall()
     for user in users:
         file.write(f"{user[0]}\n{user[1]}\n{user[2]}\n{user[3]}\n")
 
@@ -135,7 +133,7 @@ def set_transferToZero(name):
 
 
 def pause_user(name):
-    file = open("/etc/wireguard/wg0.conf", "r")
+    file = open("/etc/wireguard/wg1.conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
@@ -148,16 +146,16 @@ def pause_user(name):
             lines[i + 3] = "#" + lines[i + 3]
             lines[i + 4] = "#" + lines[i + 4]
             break
-    file = open("/etc/wireguard/wg0.conf", "w")
+    file = open("/etc/wireguard/wg1.conf", "w")
     file.writelines(lines)
     file.close()
     reload()
     db.write_to_db(sortedPeer)
-    os.system("sudo systemctl restart wg-quick@wg0.service")
+    os.system("sudo systemctl restart wg-quick@wg1.service")
 
 
 def resume_user(name):
-    file = open("/etc/wireguard/wg0.conf", "r")
+    file = open("/etc/wireguard/wg1.conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
@@ -170,10 +168,10 @@ def resume_user(name):
             lines[i + 3] = lines[i + 3][1:]
             lines[i + 4] = lines[i + 4][1:]
             break
-    file = open("/etc/wireguard/wg0.conf", "w")
+    file = open("/etc/wireguard/wg1.conf", "w")
     file.writelines(lines)
     file.close()
     reload()
     set_transferToZero(name)
     db.write_to_db(sortedPeer)
-    os.system("sudo systemctl restart wg-quick@wg0.service")
+    os.system("sudo systemctl restart wg-quick@wg1.service")

@@ -1,22 +1,21 @@
 import sqlite3
 
 conn = sqlite3.connect('users.db')
+c = conn.cursor()
 
 
 def create_table():
-    c = conn.cursor()
     c.execute("""CREATE TABLE users (
                 name text,
                 address text primary key not null unique,
                 last_handshake text,
                 transfer real
                 )""")
-    conn.commit()
 
 
 def load_all_peers():
-    # file = open("/etc/wireguard/wg0.conf", "r")
-    file = open("test.conf", "r")
+    file = open("/etc/wireguard/wg1.conf", "r")
+    # file = open("test.conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
@@ -30,7 +29,6 @@ def load_all_peers():
         c = conn.cursor()
         c.execute("INSERT OR REPLACE INTO users VALUES(? ,? ,? ,?)",
                   (name, address, last_handshake, transfer))
-        conn.commit()
 
 
 def load_lastRecords():
@@ -45,7 +43,6 @@ def load_lastRecords():
         c = conn.cursor()
         c.execute("INSERT OR REPLACE INTO users VALUES (? ,? ,? ,?)",
                   (name, address, last_handshake, transfer))
-        conn.commit()
 
 
 def write_to_db(peers):
@@ -53,5 +50,7 @@ def write_to_db(peers):
         c = conn.cursor()
         c.execute("UPDATE users SET last_handshake = ? , transfer = ? WHERE name = ?",
                   (peer.last_handshake, peer.transfer, peer.name))
-    conn.commit()
 
+
+conn.commit()
+conn.close()

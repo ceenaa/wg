@@ -45,5 +45,14 @@ Returns Total/Total days
 ### Max
 Returns user with maximum data transfer
 
+### Pause x
+pause user x
+
+### Resume x
+resume user x
+
+### x
+get user x details
+
 
 

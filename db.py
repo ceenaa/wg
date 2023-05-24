@@ -2,7 +2,7 @@ import sqlite3
 
 
 def connect():
-    conn = sqlite3.connect("peers.db")
+    conn = sqlite3.connect("users.db")
     return conn
 
 

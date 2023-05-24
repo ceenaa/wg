@@ -1,5 +1,5 @@
 import db
 
-# db.r.flushdb()
-# db.cache_names()
-db.cache_last_records()
+db.create_table()
+# db.load_all_peers()
+# db.load_lastRecords()

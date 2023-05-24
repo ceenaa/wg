@@ -1,11 +1,22 @@
-import redis
+import sqlite3
 
-r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+conn = sqlite3.connect('users.db')
+
+c = conn.cursor()
 
 
-def cache_names():
-    file = open("/etc/wireguard/wg0.conf", "r")
-    # file = open("test.conf", "r")
+def create_table():
+    c.execute("""CREATE TABLE users (
+                name text,
+                address text primary key not null unique,
+                last_handshake text,
+                transfer real
+                )""")
+
+
+def load_all_peers():
+    # file = open("/etc/wireguard/wg0.conf", "r")
+    file = open("test.conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
@@ -14,18 +25,34 @@ def cache_names():
         address = lines[i + 3]
         address = address.split(" = ")[1]
         address = address.strip()
-        r.hset(address, "name", name)
-        r.sadd("users", address)
+        transfer = 0
+        last_handshake = "None"
+        c.execute("INSERT OR REPLACE INTO users VALUES(? ,? ,? ,?)",
+                  (name, address, last_handshake, transfer))
 
 
-def cache_last_records():
+def load_lastRecords():
     file = open("peers.txt", "r")
     lines = file.readlines()
     file.close()
     for i in range(0, len(lines), 4):
+        name = lines[i].strip()
         address = lines[i + 1].strip()
         last_handshake = lines[i + 2].strip()
         transfer = float(lines[i + 3].strip())
-        r.hset(address, "last_handshake", last_handshake)
-        r.hset(address, "transfer", transfer)
+        c.execute("INSERT OR REPLACE INTO users VALUES (? ,? ,? ,?)",
+                  (name, address, last_handshake, transfer))
 
+
+def write_to_db(peers):
+    for peer in peers:
+        c.execute("UPDATE users SET last_handshake = ? , transfer = ? WHERE name = ?",
+                  (peer.last_handshake, peer.transfer, peer.name))
+
+
+# create_table()
+# load_all_peers()
+# load_lastRecords()
+
+conn.commit()
+conn.close()

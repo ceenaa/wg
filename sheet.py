@@ -7,7 +7,6 @@ import analysis
 
 
 def main():
-
     SERVICE_ACCOUNT_FILE = 'keys.json'
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
@@ -23,12 +22,11 @@ def main():
     # Call the Sheets API
     sheet = service.spreadsheets()
 
-    users = []
-    for p in analysis.sortedPeer:
-            users.append([p.name, p.transfer])
+    peers = analysis.sortedPeer
 
     body = {
-        'values': users
+        'values': peers
     }
 
-    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet3!A2", body=body, valueInputOption="USER_ENTERED").execute()
+    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet3!A2", body=body,
+                                   valueInputOption="USER_ENTERED").execute()

@@ -4,7 +4,6 @@ from datetime import date
 from dotenv import load_dotenv
 import db
 import models
-import copy
 
 load_dotenv()
 confName = os.environ.get("CONF_NAME")
@@ -12,24 +11,7 @@ confName = os.environ.get("CONF_NAME")
 global total, count, maxUsage, maxPeer
 peerMap = {}
 sortedPeer = []
-cached_peerMap = {}
 startTime = date(2023, 4, 19)
-cached_total = 0
-cache_address = db.r.smembers("users")
-
-for ad in cache_address:
-    cached_address = ad
-    cached_name = db.r.hget(ad, "name")
-    if "sina" in cached_name:
-        continue
-    cached_last_handshake = db.r.hget(ad, "last_handshake")
-    cached_transfer = db.r.hget(ad, "transfer")
-    if cached_transfer is None:
-        cached_transfer = 0
-    cached_transfer = float(cached_transfer)
-    cached_total += float(cached_transfer)
-    cached_peer = models.peer(cached_name, cached_address, cached_last_handshake, cached_transfer)
-    cached_peerMap[cached_name] = cached_peer
 
 
 def MibToGiB(mib):
@@ -67,16 +49,14 @@ def reload():
     lines = file.readlines()
     file.close()
 
-    global total, count, maxUsage, maxPeer, sortedPeer, peerMap, cached_peerMap, cached_total
+    global total, count, maxUsage, maxPeer, sortedPeer, peerMap
 
     total = 0
-    total += cached_total
     count = 0
     maxUsage = 0
     maxPeer = None
     sortedPeer = []
     peerMap = {}
-    peerMap = copy.copy(cached_peerMap)
 
     for i in range(5, len(lines), 7):
         if i + 5 >= len(lines):
@@ -89,8 +69,8 @@ def reload():
         address = lines[i + 3]
         address = address.split(": ")[1]
         address = address.strip()
-        name = db.r.hget(address, "name")
-        if "sina" in name:
+        name = db.c.execute("SELECT name FROM users WHERE address = ?", (address,)).fetchone()[0]
+        if name is None:
             continue
         last_handshake = lines[i + 4].split(": ")[1].strip()
         received = transfer[3]
@@ -116,25 +96,35 @@ def reload():
             transfer += float(sent)
 
         total += transfer
-        if peerMap.get(name) is not None:
-            peerMap[name].increaseTransfer(transfer)
-            peerMap[name].last_handshake = last_handshake
-        else:
-            p = models.peer(name, address, last_handshake, transfer)
-            peerMap[name] = p
 
-    peers = peerMap.values()
-    sortedPeer = sorted(peers, key=lambda peer: peer.transfer, reverse=True)
+        db.c.execute("SELECT * FROM users WHERE name = ?", (name,))
+        user = db.c.fetchone()
+        p = models.peer(name, address, user[2], user[3])
+        p.increaseTransfer(transfer)
+        p.last_handshake = last_handshake
+        peerMap[name] = p
+        total += p.transfer
+
+    peers = db.c.execute("SELECT * FROM users").fetchall()
+    for user in peers:
+        if user[0] not in peerMap:
+            p = models.peer(user[0], user[1], user[2], user[3])
+            total += p.transfer
+            peerMap[user[0]] = p
+    sortedPeer = sorted(peerMap.values(), key=lambda peer: peer.transfer, reverse=True)
     maxPeer = sortedPeer[0]
     maxUsage = maxPeer.transfer
     count = len(sortedPeer)
 
 
 def export():
-    file = open("peers.txt", "w")
-    for peer in sortedPeer:
-        file.write(str(peer) + "\n")
-    file.close()
+    reload()
+    db.write_to_db(sortedPeer)
+    file = open("res.txt", "w")
+    db.c.execute("SELECT * FROM users")
+    users = db.c.fetchall()
+    for user in users:
+        file.write(f"{user[0]}\n{user[1]}\n{user[2]}\n{user[3]}\n")
 
 
 def set_transferToZero(name):
@@ -161,12 +151,8 @@ def pause_user(name):
     file.writelines(lines)
     file.close()
     reload()
-    export()
+    db.write_to_db(sortedPeer)
     os.system("sudo systemctl restart wg-quick@wg0.service")
-    db.cache_last_records()
-    global cached_peerMap, cached_total
-    cached_peerMap = copy.copy(peerMap)
-    cached_total = total
 
 
 def resume_user(name):
@@ -176,7 +162,7 @@ def resume_user(name):
     for i in range(13, len(lines), 6):
         n = lines[i].split(" ")[1]
         if n == name:
-            if lines[i+1][0] != "#":
+            if lines[i + 1][0] != "#":
                 raise Exception("User already resumed")
             lines[i + 1] = lines[i + 1][1:]
             lines[i + 2] = lines[i + 2][1:]
@@ -188,9 +174,5 @@ def resume_user(name):
     file.close()
     reload()
     set_transferToZero(name)
-    export()
+    db.write_to_db(sortedPeer)
     os.system("sudo systemctl restart wg-quick@wg0.service")
-    db.cache_last_records()
-    global cached_peerMap, cached_total
-    cached_peerMap = copy.copy(peerMap)
-    cached_total = total

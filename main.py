@@ -1,5 +1,4 @@
 import os
-import schedule
 import telebot
 
 import analysis
@@ -7,7 +6,6 @@ import sheet
 
 API_KEY = os.getenv("API_KEY")
 bot = telebot.TeleBot(API_KEY)
-max_transfer = float(os.getenv("MAX_TRANSFER"))
 chat_ids = set()
 
 
@@ -178,22 +176,4 @@ def send_unpause(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
-def controller():
-    try:
-        analysis.reload()
-        sheet.main()
-        # for peer in analysis.peerMap.keys():
-        #     if peer.active == 1 and peer.transfer >= max_transfer:
-        #         analysis.pause_user(peer.name)
-        #     if peer.transfer < max_transfer:
-        #         break
-    except Exception as err:
-        for c_id in chat_ids:
-            bot.send_message(c_id, type(err).__name__ + " " + str(err))
-
-
 bot.infinity_polling(timeout=10, long_polling_timeout=5)
-
-schedule.every(30).minutes.do(controller)
-while True:
-    schedule.run_pending()

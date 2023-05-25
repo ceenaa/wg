@@ -130,24 +130,12 @@ def send_total_days(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
-def user_request(message):
-    return message.text in analysis.peerMap.keys()
-
-
-@bot.message_handler(func=user_request)
-def send_npk(message):
-    cid = message.chat.id
-    message_text = message.text
-    try:
-        bot.send_message(cid, analysis.peerMap[message_text])
-    except Exception as err:
-        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
-
-
 def pause_request(message):
-    p = message.text.split(" ")[0]
-    name = message.text.split(" ")[1]
-    return p == "Pause" and name in analysis.peerMap.keys()
+    if "Pause" in message.text:
+        name = message.text.split(" ")[1]
+        if name in analysis.peerMap.keys():
+            return True
+    return False
 
 
 @bot.message_handler(func=pause_request)
@@ -161,9 +149,11 @@ def send_pause(message):
 
 
 def unpause_request(message):
-    p = message.text.split(" ")[0]
-    name = message.text.split(" ")[1]
-    return p == "Resume" and name in analysis.peerMap.keys()
+    if "Resume" in message.text:
+        name = message.text.split(" ")[1]
+        if name in analysis.peerMap.keys():
+            return True
+    return False
 
 
 @bot.message_handler(func=unpause_request)
@@ -172,6 +162,20 @@ def send_unpause(message):
         name = message.text.split(" ")[1]
         analysis.resume_user(name)
         bot.send_message(message.chat.id, "Resumed!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+
+
+def user_request(message):
+    return message.text in analysis.peerMap.keys()
+
+
+@bot.message_handler(func=user_request)
+def send_npk(message):
+    cid = message.chat.id
+    message_text = message.text
+    try:
+        bot.send_message(cid, analysis.peerMap[message_text])
     except Exception as err:
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 

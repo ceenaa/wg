@@ -67,7 +67,8 @@ def reload():
         elif 'interface' in lines[i]:
             i += 5
         else:
-
+            if i+5 >= len(lines):
+                break
             transfer = lines[i + 5].split(" ")
             address = lines[i + 3]
             address = address.split(": ")[1]

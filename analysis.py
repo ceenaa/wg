@@ -164,12 +164,12 @@ def pause_user(name):
             lines[i + 4] = "#" + lines[i + 4]
             break
     connection = db.connect()
-    db.write_to_db(connection, sortedPeer)
     db.pause_user(connection, name)
+    reload()
+    db.write_to_db(connection, sortedPeer)
     file = open("/etc/wireguard/" + sys_name + ".conf", "w")
     file.writelines(lines)
     file.close()
-    reload()
     sheet.main()
     os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")
     connection.commit()
@@ -191,13 +191,13 @@ def resume_user(name):
             lines[i + 4] = lines[i + 4][1:]
             break
     connection = db.connect()
-    db.write_to_db(connection, sortedPeer)
     db.resume_user(connection, name)
+    reload()
+    set_transferToZero(name)
+    db.write_to_db(connection, sortedPeer)
     file = open("/etc/wireguard/" + sys_name + ".conf", "w")
     file.writelines(lines)
     file.close()
-    reload()
-    set_transferToZero(name)
     sheet.main()
     os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")
     connection.commit()

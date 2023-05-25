@@ -124,10 +124,12 @@ def reload():
             p = models.peer(user[0], user[1], user[2], user[3], user[4])
             total += p.transfer
             peerMap[user[0]] = p
-    sortedPeer = sorted(peerMap.values(), key=lambda peer: peer.transfer, reverse=True)
-    maxPeer = sortedPeer[0]
-    maxUsage = maxPeer.transfer
-    count = len(sortedPeer)
+    if len(peerMap) > 0:
+        sortedPeer = sorted(peerMap.values(), key=lambda peer: peer.transfer, reverse=True)
+    if len(sortedPeer) > 0:
+        maxPeer = sortedPeer[0]
+        maxUsage = maxPeer.transfer
+        count = len(sortedPeer)
 
 
 def export():

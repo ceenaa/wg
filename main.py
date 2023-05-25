@@ -197,11 +197,13 @@ def send_paused_users(message):
         s = ""
         i = 0
         for pu in paused_user:
-            s += str(pu) + "\n----------------\n"
+            s += str(analysis.peerMap[pu[0]]) + "\n----------------\n"
             i += 1
             if i % 20 == 0:
                 bot.send_message(message.chat.id, s)
                 s = ""
+        if s == "":
+            bot.send_message(message.chat.id, "No paused user")
         if s != "":
             bot.send_message(message.chat.id, s)
 

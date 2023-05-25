@@ -1,5 +1,5 @@
 import os
-from apscheduler.schedulers.blocking import BlockingScheduler
+import schedule
 import telebot
 
 import analysis
@@ -192,8 +192,8 @@ def controller():
             bot.send_message(c_id, type(err).__name__ + " " + str(err))
 
 
-scheduler = BlockingScheduler()
-scheduler.add_job(controller, 'cron', hour=0)
-scheduler.start()
-
 bot.infinity_polling(timeout=10, long_polling_timeout=5)
+
+schedule.every(30).minutes.do(controller)
+while True:
+    schedule.run_pending()

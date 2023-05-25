@@ -8,6 +8,7 @@ import sheet
 API_KEY = os.getenv("API_KEY")
 bot = telebot.TeleBot(API_KEY)
 max_transfer = float(os.getenv("MAX_TRANSFER"))
+chat_ids = set()
 
 
 def total_request(message):
@@ -89,6 +90,7 @@ def send_max(message):
         analysis.reload()
         sheet.main()
         bot.send_message(message.chat.id, "Reloaded!")
+        chat_ids.add(message.chat.id)
     except Exception as err:
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
@@ -177,17 +179,21 @@ def send_unpause(message):
 
 
 def controller():
-    analysis.reload()
-    sheet.main()
-    for peer in analysis.peerMap.keys():
-        if peer.active == 1 and peer.transfer >= max_transfer:
-            analysis.pause_user(peer.name)
-        if peer.transfer < max_transfer:
-            break
+    try:
+        analysis.reload()
+        sheet.main()
+        # for peer in analysis.peerMap.keys():
+        #     if peer.active == 1 and peer.transfer >= max_transfer:
+        #         analysis.pause_user(peer.name)
+        #     if peer.transfer < max_transfer:
+        #         break
+    except Exception as err:
+        for c_id in chat_ids:
+            bot.send_message(c_id, type(err).__name__ + " " + str(err))
 
 
 scheduler = BlockingScheduler()
-scheduler.add_job(analysis.reload, "cron", hour=0, minute=30)
-scheduler.add_job(sheet.main, "cron", hour=0, minute=30)
+scheduler.add_job(controller, 'cron', hour=0)
+scheduler.start()
 
 bot.infinity_polling(timeout=10, long_polling_timeout=5)

@@ -12,7 +12,8 @@ def create_table(conn):
                 name text,
                 address text primary key not null unique,
                 last_handshake text,
-                transfer real
+                transfer real,
+                active boolean
                 )""")
 
 
@@ -42,8 +43,11 @@ def load_all_peers(conn):
         address = address.strip()
         transfer = 0
         last_handshake = "None"
-        c.execute("INSERT OR REPLACE INTO users VALUES(? ,? ,? ,?)",
-                  (name, address, last_handshake, transfer))
+        active = True
+        if lines[i+1][0] == "#":
+            active = False
+        c.execute("INSERT OR REPLACE INTO users VALUES(? ,? ,? ,?, ?)",
+                  (name, address, last_handshake, transfer, active))
 
 
 def load_lastRecords(conn):
@@ -56,8 +60,9 @@ def load_lastRecords(conn):
         address = lines[i + 1].strip()
         last_handshake = lines[i + 2].strip()
         transfer = float(lines[i + 3].strip())
-        c.execute("INSERT OR REPLACE INTO users VALUES (? ,? ,? ,?)",
-                  (name, address, last_handshake, transfer))
+        active = c.execute("SELECT active FROM users WHERE name = ?", (name,)).fetchone()[0]
+        c.execute("INSERT OR REPLACE INTO users VALUES (? ,? ,? ,?, ?)",
+                  (name, address, last_handshake, transfer, active))
 
 
 def write_to_db(conn, peers):
@@ -65,3 +70,14 @@ def write_to_db(conn, peers):
     for peer in peers:
         c.execute("UPDATE users SET last_handshake = ? , transfer = ? WHERE name = ?",
                   (peer.last_handshake, peer.transfer, peer.name))
+
+
+def pause_user(conn, name):
+    c = conn.cursor()
+    c.execute("UPDATE users SET active = 1 WHERE name = ?", (name,))
+
+
+def resume_user(conn, name):
+    c = conn.cursor()
+    c.execute("UPDATE users SET active = 0 WHERE name = ?", (name,))
+

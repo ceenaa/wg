@@ -23,7 +23,7 @@ def main():
 
     users = []
     for p in analysis.sortedPeer:
-        users.append([p.name, p.transfer])
+        users.append([p.name, p.transfer, p.active])
 
     body = {
         'values': users

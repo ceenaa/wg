@@ -40,10 +40,10 @@ def totalDays():
 
 
 def reload():
-    file = open("res.txt", "w")
-    wg = subprocess.check_output("wg", shell=True)
-    file.write(wg.decode("utf-8"))
-    file.close()
+    # file = open("res.txt", "w")
+    # wg = subprocess.check_output("wg", shell=True)
+    # file.write(wg.decode("utf-8"))
+    # file.close()
 
     file = open("res.txt", "r")
     lines = file.readlines()
@@ -107,7 +107,7 @@ def reload():
             user = db.get_user(connection, address)
             connection.commit()
             connection.close()
-            p = models.peer(name, address, user[2], user[3])
+            p = models.peer(name, address, user[2], user[3], user[4])
             p.increaseTransfer(transfer)
             p.last_handshake = last_handshake
             peerMap[name] = p
@@ -120,7 +120,7 @@ def reload():
     connection.close()
     for user in peers:
         if user[0] not in peerMap:
-            p = models.peer(user[0], user[1], user[2], user[3])
+            p = models.peer(user[0], user[1], user[2], user[3], user[4])
             total += p.transfer
             peerMap[user[0]] = p
     sortedPeer = sorted(peerMap.values(), key=lambda peer: peer.transfer, reverse=True)
@@ -162,11 +162,12 @@ def pause_user(name):
             lines[i + 3] = "#" + lines[i + 3]
             lines[i + 4] = "#" + lines[i + 4]
             break
+    connection = db.connect()
+    db.pause_user(connection, name)
     file = open("/etc/wireguard/wg1.conf", "w")
     file.writelines(lines)
     file.close()
     reload()
-    connection = db.connect()
     db.write_to_db(connection, sortedPeer)
     os.system("sudo systemctl restart wg-quick@wg1.service")
 
@@ -185,12 +186,13 @@ def resume_user(name):
             lines[i + 3] = lines[i + 3][1:]
             lines[i + 4] = lines[i + 4][1:]
             break
+    connection = db.connect()
+    db.resume_user(connection, name)
     file = open("/etc/wireguard/wg1.conf", "w")
     file.writelines(lines)
     file.close()
     reload()
     set_transferToZero(name)
-    connection = db.connect()
     db.write_to_db(connection, sortedPeer)
     connection.commit()
     connection.close()

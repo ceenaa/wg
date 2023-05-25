@@ -1,8 +1,8 @@
-import analysis
 import os
+
 import telebot
 
-import db
+import analysis
 import sheet
 
 API_KEY = os.getenv("API_KEY")

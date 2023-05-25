@@ -1,6 +1,5 @@
 import db
 
-
 connection = db.connect()
 
 db.create_table(connection)

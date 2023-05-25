@@ -1,6 +1,3 @@
-from datetime import datetime
-
-
 class peer:
     def __init__(self, name, address, last_handshake, transfer, active):
         self.name = name

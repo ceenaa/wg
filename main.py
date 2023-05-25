@@ -2,7 +2,9 @@ import os
 import telebot
 
 import analysis
+import auto
 import sheet
+from threading import Thread
 
 API_KEY = os.getenv("API_KEY")
 bot = telebot.TeleBot(API_KEY)
@@ -180,4 +182,10 @@ def send_npk(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
-bot.infinity_polling(timeout=10, long_polling_timeout=5)
+def polling():
+    bot.infinity_polling(timeout=10, long_polling_timeout=5)
+
+
+if __name__ == '__main__':
+    Thread(target=polling).start()
+    Thread(target=auto.main).start()

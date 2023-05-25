@@ -26,6 +26,6 @@ def controller():
 
 
 def main():
-    schedule.every(1).minutes.do(controller)
+    schedule.every(30).minutes.do(controller)
     while True:
         schedule.run_pending()

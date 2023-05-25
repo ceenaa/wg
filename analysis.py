@@ -6,7 +6,8 @@ import db
 import models
 
 load_dotenv()
-confName = os.environ.get("CONF_NAME")
+conf_name = os.environ.get("CONF_NAME")
+sys_name = os.environ.get("SYSTEM_NAME")
 
 global total, count, maxUsage, maxPeer
 peerMap = {}
@@ -59,7 +60,7 @@ def reload():
     peerMap = {}
 
     i = 5
-    while i < len(lines) - 1:
+    while i + 2 < len(lines):
         if 'allowed' in lines[i + 2]:
             i += 4
         elif 'interface' in lines[i]:
@@ -148,7 +149,7 @@ def set_transferToZero(name):
 
 
 def pause_user(name):
-    file = open("/etc/wireguard/wg0.conf", "r")
+    file = open("/etc/wireguard/" + sys_name + ".conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
@@ -163,16 +164,16 @@ def pause_user(name):
             break
     connection = db.connect()
     db.pause_user(connection, name)
-    file = open("/etc/wireguard/wg0.conf", "w")
+    file = open("/etc/wireguard/" + sys_name + ".conf", "w")
     file.writelines(lines)
     file.close()
     reload()
     db.write_to_db(connection, sortedPeer)
-    os.system("sudo systemctl restart wg-quick@wg0.service")
+    os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")
 
 
 def resume_user(name):
-    file = open("/etc/wireguard/wg0.conf", "r")
+    file = open("/etc/wireguard/" + sys_name + ".conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
@@ -187,7 +188,7 @@ def resume_user(name):
             break
     connection = db.connect()
     db.resume_user(connection, name)
-    file = open("/etc/wireguard/wg0.conf", "w")
+    file = open("/etc/wireguard/" + sys_name + ".conf", "w")
     file.writelines(lines)
     file.close()
     reload()
@@ -195,4 +196,4 @@ def resume_user(name):
     db.write_to_db(connection, sortedPeer)
     connection.commit()
     connection.close()
-    os.system("sudo systemctl restart wg-quick@wg0.service")
+    os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")

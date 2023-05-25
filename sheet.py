@@ -1,9 +1,14 @@
 from __future__ import print_function
+
+import os
+
 from googleapiclient.discovery import build
 
 from google.oauth2 import service_account
 
 import analysis
+
+sheet_id = os.environ.get("SHEET_ID")
 
 
 def main():
@@ -14,7 +19,7 @@ def main():
         SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
     # The ID spreadsheet.
-    SAMPLE_SPREADSHEET_ID = '1JMfbph5fxaqu1MrQFIMn6Ju5ZiFbCJsxqpnE82FTeQo'
+    SAMPLE_SPREADSHEET_ID = sheet_id
 
     service = build('sheets', 'v4', credentials=creds)
 
@@ -29,5 +34,5 @@ def main():
         'values': users
     }
 
-    sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="mx!A2", body=body,
+    sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=analysis.conf_name + "!A2", body=body,
                           valueInputOption="USER_ENTERED").execute()

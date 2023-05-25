@@ -172,6 +172,8 @@ def pause_user(name):
     sheet.main()
     db.write_to_db(connection, sortedPeer)
     os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")
+    connection.commit()
+    connection.close()
 
 
 def resume_user(name):
@@ -197,6 +199,6 @@ def resume_user(name):
     set_transferToZero(name)
     sheet.main()
     db.write_to_db(connection, sortedPeer)
+    os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")
     connection.commit()
     connection.close()
-    os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")

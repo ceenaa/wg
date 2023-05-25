@@ -60,7 +60,8 @@ def load_lastRecords(conn):
         address = lines[i + 1].strip()
         last_handshake = lines[i + 2].strip()
         transfer = float(lines[i + 3].strip())
-        active = c.execute("SELECT active FROM users WHERE name = ?", (name,)).fetchone()[0]
+        c.execute("SELECT active FROM users WHERE name = ?", (name,))
+        active = c.fetchone()[0]
         c.execute("INSERT OR REPLACE INTO users VALUES (? ,? ,? ,?, ?)",
                   (name, address, last_handshake, transfer, active))
 

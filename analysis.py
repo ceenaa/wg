@@ -40,10 +40,10 @@ def totalDays():
 
 
 def reload():
-    # file = open("res.txt", "w")
-    # wg = subprocess.check_output("wg", shell=True)
-    # file.write(wg.decode("utf-8"))
-    # file.close()
+    file = open("res.txt", "w")
+    wg = subprocess.check_output("wg", shell=True)
+    file.write(wg.decode("utf-8"))
+    file.close()
 
     file = open("res.txt", "r")
     lines = file.readlines()
@@ -100,8 +100,6 @@ def reload():
                 transfer += kibToGiB(float(sent))
             elif sent_type == "GiB":
                 transfer += float(sent)
-
-            total += transfer
 
             connection = db.connect()
             user = db.get_user(connection, address)

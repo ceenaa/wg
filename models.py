@@ -10,7 +10,7 @@ class peer:
         self.active = active
 
     def __str__(self):
-        s = f"{self.name}\n{self.address}\n{self.last_handshake}\n{self.transfer}\n{self.active}\n"
+        s = f"{self.name}\n{self.address}\n{self.last_handshake}\n{self.transfer}\n{self.active}"
         return s
 
     def increaseTransfer(self, transfer):

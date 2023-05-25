@@ -3,6 +3,7 @@ import telebot
 
 import analysis
 import auto
+import db
 import sheet
 from threading import Thread
 
@@ -182,10 +183,38 @@ def send_npk(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
+def paused_users_request(message):
+    return message.text == "Paused users"
+
+
+@bot.message_handler(func=paused_users_request)
+def send_paused_users(message):
+    cid = message.chat.id
+    try:
+        connection = db.connect()
+        paused_user = db.paused_users(connection)
+        connection.close()
+        s = ""
+        i = 0
+        for pu in paused_user:
+            s += str(pu) + "\n----------------\n"
+            i += 1
+            if i % 20 == 0:
+                bot.send_message(message.chat.id, s)
+                s = ""
+        if s != "":
+            bot.send_message(message.chat.id, s)
+
+    except Exception as err:
+        bot.send_message(cid, type(err).__name__ + " " + str(err))
+
+
 def polling():
     bot.infinity_polling(timeout=10, long_polling_timeout=5)
 
 
 if __name__ == '__main__':
+    analysis.reload()
+    sheet.main()
     Thread(target=polling).start()
     Thread(target=auto.main).start()

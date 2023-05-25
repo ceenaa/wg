@@ -46,7 +46,7 @@ def load_all_peers(conn):
         transfer = 0
         last_handshake = "None"
         active = True
-        if lines[i+1][0] == "#":
+        if lines[i + 1][0] == "#":
             active = False
         c.execute("INSERT OR REPLACE INTO users VALUES(? ,? ,? ,?, ?)",
                   (name, address, last_handshake, transfer, active))
@@ -84,3 +84,8 @@ def resume_user(conn, name):
     c = conn.cursor()
     c.execute("UPDATE users SET active = 1 WHERE name = ?", (name,))
 
+
+def paused_users(conn):
+    c = conn.cursor()
+    c.execute("SELECT name FROM users WHERE active = 0")
+    return c.fetchall()

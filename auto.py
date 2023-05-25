@@ -15,7 +15,7 @@ def controller():
     try:
         analysis.reload()
         sheet.main()
-        for peer in analysis.peerMap.keys():
+        for peer in analysis.sortedPeer:
             if peer.active == 1 and peer.transfer >= max_transfer:
                 analysis.pause_user(peer.name)
             if peer.transfer < max_transfer:
@@ -26,6 +26,6 @@ def controller():
 
 
 def main():
-    schedule.every(30).minutes.do(controller)
+    schedule.every(1).minutes.do(controller)
     while True:
         schedule.run_pending()

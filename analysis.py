@@ -4,6 +4,7 @@ from datetime import date
 from dotenv import load_dotenv
 import db
 import models
+import sheet
 
 load_dotenv()
 conf_name = os.environ.get("CONF_NAME")
@@ -168,6 +169,7 @@ def pause_user(name):
     file.writelines(lines)
     file.close()
     reload()
+    sheet.main()
     db.write_to_db(connection, sortedPeer)
     os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")
 
@@ -193,6 +195,7 @@ def resume_user(name):
     file.close()
     reload()
     set_transferToZero(name)
+    sheet.main()
     db.write_to_db(connection, sortedPeer)
     connection.commit()
     connection.close()

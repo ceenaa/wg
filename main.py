@@ -78,11 +78,11 @@ def send_max(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
-def max_request(message):
+def reload_request(message):
     return message.text == "Reload"
 
 
-@bot.message_handler(func=max_request)
+@bot.message_handler(func=reload_request)
 def send_max(message):
     try:
         analysis.reload()
@@ -104,10 +104,6 @@ def send_daily_average(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
-def total_days_request(message):
-    return message.text == "Total days"
-
-
 def export_request(message):
     return message.text == "Export"
 
@@ -119,6 +115,10 @@ def send_export(message):
         bot.send_message(message.chat.id, "Exported!")
     except Exception as err:
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+
+
+def total_days_request(message):
+    return message.text == "Total days"
 
 
 @bot.message_handler(func=total_days_request)

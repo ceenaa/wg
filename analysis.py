@@ -61,9 +61,11 @@ def reload():
     peerMap = {}
 
     i = 5
-    while i + 2 < len(lines):
+    while i + 6 < len(lines):
         if 'allowed' in lines[i + 2]:
             i += 4
+        elif 'transfer' in lines[i + 4]:
+            i += 6
         elif 'interface' in lines[i]:
             i += 5
         else:

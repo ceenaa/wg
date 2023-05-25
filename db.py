@@ -75,10 +75,10 @@ def write_to_db(conn, peers):
 
 def pause_user(conn, name):
     c = conn.cursor()
-    c.execute("UPDATE users SET active = 1 WHERE name = ?", (name,))
+    c.execute("UPDATE users SET active = 0 WHERE name = ?", (name,))
 
 
 def resume_user(conn, name):
     c = conn.cursor()
-    c.execute("UPDATE users SET active = 0 WHERE name = ?", (name,))
+    c.execute("UPDATE users SET active = 1 WHERE name = ?", (name,))
 

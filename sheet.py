@@ -34,5 +34,5 @@ def main():
         'values': users
     }
 
-    sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=analysis.conf_name + "!A2", body=body,
+    sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=analysis.conf_name+"!A2", body=body,
                           valueInputOption="USER_ENTERED").execute()

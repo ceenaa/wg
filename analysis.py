@@ -164,8 +164,8 @@ def pause_user(name):
             lines[i + 4] = "#" + lines[i + 4]
             break
     connection = db.connect()
-    db.pause_user(connection, name)
     db.write_to_db(connection, sortedPeer)
+    db.pause_user(connection, name)
     file = open("/etc/wireguard/" + sys_name + ".conf", "w")
     file.writelines(lines)
     file.close()
@@ -191,8 +191,8 @@ def resume_user(name):
             lines[i + 4] = lines[i + 4][1:]
             break
     connection = db.connect()
-    db.resume_user(connection, name)
     db.write_to_db(connection, sortedPeer)
+    db.resume_user(connection, name)
     file = open("/etc/wireguard/" + sys_name + ".conf", "w")
     file.writelines(lines)
     file.close()

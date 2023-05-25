@@ -1,5 +1,5 @@
 import os
-
+from apscheduler.schedulers.blocking import BlockingScheduler
 import telebot
 
 import analysis
@@ -7,6 +7,7 @@ import sheet
 
 API_KEY = os.getenv("API_KEY")
 bot = telebot.TeleBot(API_KEY)
+max_transfer = float(os.getenv("MAX_TRANSFER"))
 
 
 def total_request(message):
@@ -174,5 +175,19 @@ def send_unpause(message):
     except Exception as err:
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
+
+def controller():
+    analysis.reload()
+    sheet.main()
+    for peer in analysis.peerMap.keys():
+        if peer.active == 1 and peer.transfer >= max_transfer:
+            analysis.pause_user(peer.name)
+        if peer.transfer < max_transfer:
+            break
+
+
+scheduler = BlockingScheduler()
+scheduler.add_job(analysis.reload, "cron", hour=0, minute=30)
+scheduler.add_job(sheet.main, "cron", hour=0, minute=30)
 
 bot.infinity_polling(timeout=10, long_polling_timeout=5)

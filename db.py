@@ -1,5 +1,7 @@
 import sqlite3
 
+import analysis
+
 
 def connect():
     conn = sqlite3.connect("users.db")
@@ -31,7 +33,7 @@ def get_user(conn, address):
 
 def load_all_peers(conn):
     c = conn.cursor()
-    file = open("/etc/wireguard/wg0.conf", "r")
+    file = open("/etc/wireguard/" + analysis.conf_name + ".conf", "r")
     # file = open("test.conf", "r")
     lines = file.readlines()
     file.close()

@@ -165,6 +165,7 @@ def pause_user(name):
             break
     connection = db.connect()
     db.pause_user(connection, name)
+    connection.commit()
     reload()
     db.write_to_db(connection, sortedPeer)
     file = open("/etc/wireguard/" + sys_name + ".conf", "w")
@@ -192,6 +193,7 @@ def resume_user(name):
             break
     connection = db.connect()
     db.resume_user(connection, name)
+    connection.commit()
     reload()
     set_transferToZero(name)
     db.write_to_db(connection, sortedPeer)

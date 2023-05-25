@@ -138,6 +138,7 @@ def export():
     file = open("res.txt", "w")
     for user in users:
         file.write(f"{user[0]}\n{user[1]}\n{user[2]}\n{user[3]}\n")
+    file.close()
 
 
 def set_transferToZero(name):

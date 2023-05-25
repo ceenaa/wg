@@ -148,7 +148,7 @@ def set_transferToZero(name):
 
 
 def pause_user(name):
-    file = open("/etc/wireguard/wg1.conf", "r")
+    file = open("/etc/wireguard/wg0.conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
@@ -163,16 +163,16 @@ def pause_user(name):
             break
     connection = db.connect()
     db.pause_user(connection, name)
-    file = open("/etc/wireguard/wg1.conf", "w")
+    file = open("/etc/wireguard/wg0.conf", "w")
     file.writelines(lines)
     file.close()
     reload()
     db.write_to_db(connection, sortedPeer)
-    os.system("sudo systemctl restart wg-quick@wg1.service")
+    os.system("sudo systemctl restart wg-quick@wg0.service")
 
 
 def resume_user(name):
-    file = open("/etc/wireguard/wg1.conf", "r")
+    file = open("/etc/wireguard/wg0.conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
@@ -187,7 +187,7 @@ def resume_user(name):
             break
     connection = db.connect()
     db.resume_user(connection, name)
-    file = open("/etc/wireguard/wg1.conf", "w")
+    file = open("/etc/wireguard/wg0.conf", "w")
     file.writelines(lines)
     file.close()
     reload()
@@ -195,4 +195,4 @@ def resume_user(name):
     db.write_to_db(connection, sortedPeer)
     connection.commit()
     connection.close()
-    os.system("sudo systemctl restart wg-quick@wg1.service")
+    os.system("sudo systemctl restart wg-quick@wg0.service")

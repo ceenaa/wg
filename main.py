@@ -1,15 +1,16 @@
 import os
+import threading
+
 import telebot
 
 import analysis
 import auto
 import db
 import sheet
-from threading import Thread
+
 
 API_KEY = os.getenv("API_KEY")
 bot = telebot.TeleBot(API_KEY)
-chat_ids = set()
 
 
 def total_request(message):
@@ -91,7 +92,6 @@ def send_max(message):
         analysis.reload()
         sheet.main()
         bot.send_message(message.chat.id, "Reloaded!")
-        chat_ids.add(message.chat.id)
     except Exception as err:
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
@@ -215,8 +215,7 @@ def polling():
     bot.infinity_polling(timeout=10, long_polling_timeout=5)
 
 
-if __name__ == '__main__':
-    analysis.reload()
-    sheet.main()
-    Thread(target=polling).start()
-    Thread(target=auto.main).start()
+analysis.reload()
+sheet.main()
+threading.Thread(auto.auto(30*60)).start()
+polling()

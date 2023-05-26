@@ -217,5 +217,5 @@ def polling():
 
 analysis.reload()
 sheet.main()
-threading.Thread(auto.auto(30*60)).start()
+threading.Thread(target=lambda: auto.auto(30*60)).start()
 polling()

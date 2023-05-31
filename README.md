@@ -5,6 +5,16 @@ Simple wireguard telegram bot administration panel that you can see users data u
 Google sheet feature added that you can save your user usage into your google sheet. </br>
 just import your google api keys to files.
 
+# Tips
+To use this bot you need to set name for peers in your server config file. </br>
+like (setting sample1 to name of this peer): </br>
+\### sample1 ### </br>
+[peer] </br>
+... </br>
+and space between each state must be just one. </br></br>
+![image](https://github.com/ceenaa/wg/assets/88087819/87bdb15b-f8b9-4779-b912-2de0a5327ddd)
+
+
 # How to use
 First install requirements.txt </br>
 ```

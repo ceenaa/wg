@@ -6,13 +6,18 @@ Google sheet feature added that you can save your user usage into your google sh
 just import your google api keys to files.
 
 # Tips
+### 1.
 To use this bot you need to set name for peers in your server config file. </br>
 like (setting sample1 to name of this peer): </br>
 \### sample1 ### </br>
 [peer] </br>
 ... </br>
 and space between each state must be just one. </br></br>
-![image](https://github.com/ceenaa/wg/assets/88087819/87bdb15b-f8b9-4779-b912-2de0a5327ddd)
+![image](https://github.com/ceenaa/wg/assets/88087819/87bdb15b-f8b9-4779-b912-2de0a5327ddd) </br>
+
+### 2.
+After resuming of a paused user, its usage set to 0. so if you want to make usage of a user to 0 just pause and resume it. </br>
+Also if you want to reload the wireguard in server just puase and resume a user.
 
 
 # How to use
@@ -66,7 +71,7 @@ Returns user with maximum data transfer
 Pause user x
 
 ### Reusme x
-Resume user x
+Resume user x </br>
 
 ### x
 send user x derails

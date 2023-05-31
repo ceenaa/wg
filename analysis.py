@@ -4,32 +4,16 @@ from datetime import date
 from dotenv import load_dotenv
 import db
 import models
-import copy
+import sheet
 
 load_dotenv()
-confName = os.environ.get("CONF_NAME")
+conf_name = os.environ.get("CONF_NAME")
+sys_name = os.environ.get("SYSTEM_NAME")
 
 global total, count, maxUsage, maxPeer
 peerMap = {}
 sortedPeer = []
-cached_peerMap = {}
 startTime = date(2023, 4, 19)
-cached_total = 0
-cache_address = db.r.smembers("users")
-
-for ad in cache_address:
-    cached_address = ad
-    cached_name = db.r.hget(ad, "name")
-    if "sina" in cached_name:
-        continue
-    cached_last_handshake = db.r.hget(ad, "last_handshake")
-    cached_transfer = db.r.hget(ad, "transfer")
-    if cached_transfer is None:
-        cached_transfer = 0
-    cached_transfer = float(cached_transfer)
-    cached_total += float(cached_transfer)
-    cached_peer = models.peer(cached_name, cached_address, cached_last_handshake, cached_transfer)
-    cached_peerMap[cached_name] = cached_peer
 
 
 def MibToGiB(mib):
@@ -67,73 +51,100 @@ def reload():
     lines = file.readlines()
     file.close()
 
-    global total, count, maxUsage, maxPeer, sortedPeer, peerMap, cached_peerMap, cached_total
+    global total, count, maxUsage, maxPeer, sortedPeer, peerMap
 
     total = 0
-    total += cached_total
     count = 0
     maxUsage = 0
     maxPeer = None
     sortedPeer = []
     peerMap = {}
-    peerMap = copy.copy(cached_peerMap)
 
-    for i in range(5, len(lines), 7):
-        if i + 5 >= len(lines):
-            break
+    i = 5
+    while i + 6 < len(lines):
         if 'allowed' in lines[i + 2]:
-            break
-        transfer = lines[i + 5].split(" ")
-        if len(transfer) < 3 or transfer[2] != "transfer:":
-            continue
-        address = lines[i + 3]
-        address = address.split(": ")[1]
-        address = address.strip()
-        name = db.r.hget(address, "name")
-        if "sina" in name:
-            continue
-        last_handshake = lines[i + 4].split(": ")[1].strip()
-        received = transfer[3]
-        received_type = transfer[4]
-
-        sent = transfer[6]
-        sent_type = transfer[7]
-
-        transfer = 0
-
-        if received_type == "MiB":
-            transfer += MibToGiB(float(received))
-        elif received_type == "KiB":
-            transfer += kibToGiB(float(received))
-        elif received_type == "GiB":
-            transfer += float(received)
-
-        if sent_type == "MiB":
-            transfer += MibToGiB(float(sent))
-        elif sent_type == "KiB":
-            transfer += kibToGiB(float(sent))
-        elif sent_type == "GiB":
-            transfer += float(sent)
-
-        total += transfer
-        if peerMap.get(name) is not None:
-            peerMap[name].increaseTransfer(transfer)
-            peerMap[name].last_handshake = last_handshake
+            i += 4
+        elif 'transfer' in lines[i + 4]:
+            i += 6
+        elif 'interface' in lines[i]:
+            i += 5
         else:
-            p = models.peer(name, address, last_handshake, transfer)
-            peerMap[name] = p
+            if i+3 >= len(lines) or i+4 >= len(lines) or i+5 >= len(lines):
+                break
+            transfer = lines[i + 5].split(" ")
+            address = lines[i + 3]
+            address = address.split(": ")[1]
+            address = address.strip()
+            connection = db.connect()
+            user = db.get_user(connection, address)
+            connection.commit()
+            connection.close()
+            if user is None:
+                i += 7
+                continue
+            name = user[0]
+            last_handshake = lines[i + 4].split(': ')[1].strip()
+            received = transfer[3]
+            received_type = transfer[4]
 
-    peers = peerMap.values()
-    sortedPeer = sorted(peers, key=lambda peer: peer.transfer, reverse=True)
-    maxPeer = sortedPeer[0]
-    maxUsage = maxPeer.transfer
-    count = len(sortedPeer)
+            sent = transfer[6]
+            sent_type = transfer[7]
+
+            transfer = 0
+
+            if received_type == "MiB":
+                transfer += MibToGiB(float(received))
+            elif received_type == "KiB":
+                transfer += kibToGiB(float(received))
+            elif received_type == "GiB":
+                transfer += float(received)
+
+            if sent_type == "MiB":
+                transfer += MibToGiB(float(sent))
+            elif sent_type == "KiB":
+                transfer += kibToGiB(float(sent))
+            elif sent_type == "GiB":
+                transfer += float(sent)
+
+            connection = db.connect()
+            user = db.get_user(connection, address)
+            connection.commit()
+            connection.close()
+            p = models.peer(name, address, user[2], user[3], user[4])
+            p.increaseTransfer(transfer)
+            p.last_handshake = last_handshake
+            peerMap[name] = p
+            total += p.transfer
+            i += 7
+
+    connection = db.connect()
+    peers = db.get_all(connection)
+    connection.commit()
+    connection.close()
+    for user in peers:
+        if user[0] not in peerMap:
+            p = models.peer(user[0], user[1], user[2], user[3], user[4])
+            total += p.transfer
+            peerMap[user[0]] = p
+    if len(peerMap) > 0:
+        sortedPeer = sorted(peerMap.values(), key=lambda peer: peer.transfer, reverse=True)
+    if len(sortedPeer) > 0:
+        maxPeer = sortedPeer[0]
+        maxUsage = maxPeer.transfer
+        count = len(sortedPeer)
 
 
 def export():
-    file = open("peers.txt", "w")
-    for peer in sortedPeer:
-        file.write(str(peer) + "\n")
+    reload()
+    connection = db.connect()
+    db.write_to_db(connection, sortedPeer)
+    users = db.get_all(connection)
+    connection.commit()
+    connection.close()
+
+    file = open("res.txt", "w")
+    for user in users:
+        file.write(f"{user[0]}\n{user[1]}\n{user[2]}\n{user[3]}\n")
     file.close()
 
 
@@ -144,7 +155,7 @@ def set_transferToZero(name):
 
 
 def pause_user(name):
-    file = open("/etc/wireguard/wg0.conf", "r")
+    file = open("/etc/wireguard/" + sys_name + ".conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
@@ -157,40 +168,44 @@ def pause_user(name):
             lines[i + 3] = "#" + lines[i + 3]
             lines[i + 4] = "#" + lines[i + 4]
             break
-    file = open("/etc/wireguard/wg0.conf", "w")
+    connection = db.connect()
+    db.pause_user(connection, name)
+    connection.commit()
+    reload()
+    db.write_to_db(connection, sortedPeer)
+    file = open("/etc/wireguard/" + sys_name + ".conf", "w")
     file.writelines(lines)
     file.close()
-    reload()
-    export()
-    os.system("sudo systemctl restart wg-quick@wg0.service")
-    db.cache_last_records()
-    global cached_peerMap, cached_total
-    cached_peerMap = copy.copy(peerMap)
-    cached_total = total
+    sheet.main()
+    os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")
+    connection.commit()
+    connection.close()
 
 
 def resume_user(name):
-    file = open("/etc/wireguard/wg0.conf", "r")
+    file = open("/etc/wireguard/" + sys_name + ".conf", "r")
     lines = file.readlines()
     file.close()
     for i in range(13, len(lines), 6):
         n = lines[i].split(" ")[1]
         if n == name:
-            if lines[i+1][0] != "#":
+            if lines[i + 1][0] != "#":
                 raise Exception("User already resumed")
             lines[i + 1] = lines[i + 1][1:]
             lines[i + 2] = lines[i + 2][1:]
             lines[i + 3] = lines[i + 3][1:]
             lines[i + 4] = lines[i + 4][1:]
             break
-    file = open("/etc/wireguard/wg0.conf", "w")
-    file.writelines(lines)
-    file.close()
+    connection = db.connect()
+    db.resume_user(connection, name)
+    connection.commit()
     reload()
     set_transferToZero(name)
-    export()
-    os.system("sudo systemctl restart wg-quick@wg0.service")
-    db.cache_last_records()
-    global cached_peerMap, cached_total
-    cached_peerMap = copy.copy(peerMap)
-    cached_total = total
+    db.write_to_db(connection, sortedPeer)
+    file = open("/etc/wireguard/" + sys_name + ".conf", "w")
+    file.writelines(lines)
+    file.close()
+    sheet.main()
+    os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")
+    connection.commit()
+    connection.close()

@@ -1,8 +1,13 @@
-import analysis
 import os
+import threading
+
 import telebot
 
+import analysis
+import auto
+import db
 import sheet
+
 
 API_KEY = os.getenv("API_KEY")
 bot = telebot.TeleBot(API_KEY)
@@ -77,11 +82,11 @@ def send_max(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
-def max_request(message):
+def reload_request(message):
     return message.text == "Reload"
 
 
-@bot.message_handler(func=max_request)
+@bot.message_handler(func=reload_request)
 def send_max(message):
     try:
         analysis.reload()
@@ -103,10 +108,6 @@ def send_daily_average(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
-def total_days_request(message):
-    return message.text == "Total days"
-
-
 def export_request(message):
     return message.text == "Export"
 
@@ -120,10 +121,50 @@ def send_export(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
+def total_days_request(message):
+    return message.text == "Total days"
+
+
 @bot.message_handler(func=total_days_request)
 def send_total_days(message):
     try:
         bot.send_message(message.chat.id, analysis.totalDays())
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+
+
+def pause_request(message):
+    if "Pause" in message.text:
+        name = message.text.split(" ")[1]
+        if name in analysis.peerMap.keys():
+            return True
+    return False
+
+
+@bot.message_handler(func=pause_request)
+def send_pause(message):
+    try:
+        name = message.text.split(" ")[1]
+        analysis.pause_user(name)
+        bot.send_message(message.chat.id, "Paused!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+
+
+def unpause_request(message):
+    if "Resume" in message.text:
+        name = message.text.split(" ")[1]
+        if name in analysis.peerMap.keys():
+            return True
+    return False
+
+
+@bot.message_handler(func=unpause_request)
+def send_unpause(message):
+    try:
+        name = message.text.split(" ")[1]
+        analysis.resume_user(name)
+        bot.send_message(message.chat.id, "Resumed!")
     except Exception as err:
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
@@ -142,36 +183,39 @@ def send_npk(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
-def pause_request(message):
-    p = message.text.split(" ")[0]
-    name = message.text.split(" ")[1]
-    return p == "Pause" and name in analysis.peerMap.keys()
+def paused_users_request(message):
+    return message.text == "Paused users"
 
 
-@bot.message_handler(func=pause_request)
-def send_pause(message):
+@bot.message_handler(func=paused_users_request)
+def send_paused_users(message):
+    cid = message.chat.id
     try:
-        name = message.text.split(" ")[1]
-        analysis.pause_user(name)
-        bot.send_message(message.chat.id, "Paused!")
+        connection = db.connect()
+        paused_user = db.paused_users(connection)
+        connection.close()
+        s = ""
+        i = 0
+        for pu in paused_user:
+            s += str(analysis.peerMap[pu[0]]) + "\n----------------\n"
+            i += 1
+            if i % 20 == 0:
+                bot.send_message(message.chat.id, s)
+                s = ""
+        if s == "":
+            bot.send_message(message.chat.id, "No paused user")
+        if s != "":
+            bot.send_message(message.chat.id, s)
+
     except Exception as err:
-        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+        bot.send_message(cid, type(err).__name__ + " " + str(err))
 
 
-def unpause_request(message):
-    p = message.text.split(" ")[0]
-    name = message.text.split(" ")[1]
-    return p == "Resume" and name in analysis.peerMap.keys()
+def polling():
+    bot.infinity_polling(timeout=10, long_polling_timeout=5)
 
 
-@bot.message_handler(func=unpause_request)
-def send_unpause(message):
-    try:
-        name = message.text.split(" ")[1]
-        analysis.resume_user(name)
-        bot.send_message(message.chat.id, "Resumed!")
-    except Exception as err:
-        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
-
-
-bot.infinity_polling(timeout=10, long_polling_timeout=5)
+analysis.reload()
+sheet.main()
+threading.Thread(target=lambda: auto.auto(30*60)).start()
+polling()

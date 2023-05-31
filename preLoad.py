@@ -1,5 +1,10 @@
 import db
 
-db.r.flushdb()
-db.cache_names()
-db.cache_last_records()
+connection = db.connect()
+
+db.create_table(connection)
+db.load_all_peers(connection)
+db.load_lastRecords(connection)
+
+connection.commit()
+connection.close()

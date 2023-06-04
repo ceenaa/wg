@@ -20,8 +20,6 @@ def controller():
 
 
 def auto(delay):
-    next_time = time.time() + delay
     while True:
-        time.sleep(max(0, next_time - time.time()))
         controller()
-        next_time += (time.time() - next_time) // delay * delay + delay
+        time.sleep(delay)

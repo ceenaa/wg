@@ -42,6 +42,8 @@ def totalDays():
 
 
 def reload():
+    connection = db.connect()
+    peers = db.get_all(connection)
     file = open("res.txt", "w")
     wg = subprocess.check_output("wg", shell=True)
     file.write(wg.decode("utf-8"))
@@ -75,10 +77,8 @@ def reload():
             address = lines[i + 3]
             address = address.split(": ")[1]
             address = address.strip()
-            connection = db.connect()
             user = db.get_user(connection, address)
-            connection.commit()
-            connection.close()
+
             if user is None:
                 i += 7
                 continue
@@ -106,21 +106,15 @@ def reload():
             elif sent_type == "GiB":
                 transfer += float(sent)
 
-            connection = db.connect()
-            user = db.get_user(connection, address)
-            connection.commit()
-            connection.close()
             p = models.peer(name, address, user[2], user[3], user[4])
             p.increaseTransfer(transfer)
             p.last_handshake = last_handshake
             peerMap[name] = p
             total += p.transfer
             i += 7
-
-    connection = db.connect()
-    peers = db.get_all(connection)
     connection.commit()
     connection.close()
+
     for user in peers:
         if user[0] not in peerMap:
             p = models.peer(user[0], user[1], user[2], user[3], user[4])
@@ -136,14 +130,9 @@ def reload():
 
 def export():
     reload()
-    connection = db.connect()
-    db.write_to_db(connection, sortedPeer)
-    users = db.get_all(connection)
-    connection.commit()
-    connection.close()
 
     file = open("peers.txt", "w")
-    for user in users:
+    for user in sortedPeer:
         file.write(f"{user[0]}\n{user[1]}\n{user[2]}\n{user[3]}\n")
     file.close()
 
@@ -170,7 +159,6 @@ def pause_user(name):
             break
     connection = db.connect()
     db.pause_user(connection, name)
-    connection.commit()
     reload()
     db.write_to_db(connection, sortedPeer)
     file = open("/etc/wireguard/" + sys_name + ".conf", "w")

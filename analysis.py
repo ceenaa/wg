@@ -132,8 +132,8 @@ def export():
     reload()
 
     file = open("peers.txt", "w")
-    for user in sortedPeer:
-        file.write(f"{user[0]}\n{user[1]}\n{user[2]}\n{user[3]}\n")
+    for peer in sortedPeer:
+        file.write(f"{peer.name}\n{peer.address}\n{peer.last_handshake}\n{peer.transfer}\n")
     file.close()
 
 

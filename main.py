@@ -104,6 +104,22 @@ def reset_usage(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
+def make_usage_request(message):
+    return message.text == "Make usage"
+
+
+@bot.message_handler(func=make_usage_request)
+def make_usage(message):
+    try:
+        connection = db.connect()
+        db.make_usage_for_name(connection, analysis.conf_name)
+        connection.commit()
+        connection.close()
+        bot.send_message(message.chat.id, "Usage made!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+
+
 def max_request(message):
     return message.text == "Max"
 

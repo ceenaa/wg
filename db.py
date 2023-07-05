@@ -103,6 +103,11 @@ def get_usage_by_name(conn, name):
     return data[0], data[1], data[2]
 
 
+def make_usage_for_name(conn, name):
+    c = conn.cursor()
+    c.execute("INSERT INTO usages VALUES (?, date('now'), 0.01)", (name,))
+
+
 def reset_usage_and_date_by_name(conn, name):
     c = conn.cursor()
     if c.execute("SELECT * FROM usages WHERE name = ?", (name,)) == None:
@@ -116,7 +121,4 @@ def add_usage_by_name(conn, name, transfer):
     c = conn.cursor()
     c.execute("SELECT date FROM usages WHERE name = ?", (name,))
     date = c.fetchone()
-    if date is None:
-        c.execute("INSERT INTO usages VALUES (?, date('now'), ?)", (name, transfer))
-    else:
-        c.execute("UPDATE usages SET transfer = transfer + ? WHERE name = ?", (transfer, name))
+    c.execute("UPDATE usages SET transfer = transfer + ? WHERE name = ?", (transfer, name))

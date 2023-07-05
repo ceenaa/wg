@@ -143,6 +143,7 @@ def reload():
         count = len(sortedPeer)
 
     temp_usage = format(temp_usage, '.2f')
+    temp_usage = float(temp_usage)
 
 
 def export():

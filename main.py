@@ -84,7 +84,7 @@ def send_usage(message):
         usage = format(usage, '.2f')
         connection.close()
         bot.send_message(message.chat.id,
-                         "Name: " + name + "\nStart time: " + start_time + " :" + analysis.total_days() + "days" +"\nUsage: " + usage + " Gib")
+                         "Name: " + name + "\nStart time: " + start_time + " :" + str(analysis.total_days()) + "days" +"\nUsage: " + usage + " Gib")
     except Exception as err:
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 

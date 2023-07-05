@@ -80,7 +80,7 @@ def send_usage(message):
         data = db.get_usage_by_name(connection, analysis.conf_name)
         name = data[0]
         start_time = data[1]
-        usage = data[2] + analysis.temp_usage
+        usage = float(data[2]) + analysis.temp_usage
         connection.close()
         bot.send_message(message.chat.id,
                          "Name: " + name + "\nStart time: " + start_time + "\nUsage: " + str(usage) + " Gib")

@@ -13,37 +13,50 @@ sys_name = os.environ.get("SYSTEM_NAME")
 global total, count, maxUsage, maxPeer
 peerMap = {}
 sortedPeer = []
-startTime = date(2023, 4, 19)
+temp_usage = 0
 
 
-def MibToGiB(mib):
+def mib_to_gib(mib):
     return mib / 1024
 
 
-def kibToGiB(kib):
+def kib_to_gib(kib):
     return kib / 1024 / 1024
 
 
-def calcAverage():
+def calc_average():
     avg = total / count
     avg = format(avg, '.2f')
     return avg
 
 
-def dailyAverage():
-    nowTime = date.today()
-    res = (nowTime - startTime).days
+def daily_average():
+    connection = db.connect()
+    _, start_time, _ = db.get_usage_by_name(connection, conf_name)
+    connection.close()
+    start_time = start_time.split("-")
+    start_time = date(start_time[0], start_time[1], start_time[2])
+    now_time = date.today()
+
+    res = (now_time - start_time).days
     return total / res
 
 
-def totalDays():
-    nowTime = date.today()
-    return (nowTime - startTime).days
+def total_days():
+    connection = db.connect()
+    _, start_time, _ = db.get_usage_by_name(connection, conf_name)
+    connection.close()
+    start_time = start_time.split("-")
+    start_time = date(start_time[0], start_time[1], start_time[2])
+
+    now_time = date.today()
+    return (now_time - start_time).days
 
 
 def reload():
     connection = db.connect()
     peers = db.get_all(connection)
+
     file = open("res.txt", "w")
     wg = subprocess.check_output("wg", shell=True)
     file.write(wg.decode("utf-8"))
@@ -53,8 +66,8 @@ def reload():
     lines = file.readlines()
     file.close()
 
-    global total, count, maxUsage, maxPeer, sortedPeer, peerMap
-
+    global total, count, maxUsage, maxPeer, sortedPeer, peerMap, temp_usage
+    temp_usage = 0
     total = 0
     count = 0
     maxUsage = 0
@@ -71,7 +84,7 @@ def reload():
         elif 'interface' in lines[i]:
             i += 5
         else:
-            if i+3 >= len(lines) or i+4 >= len(lines) or i+5 >= len(lines):
+            if i + 3 >= len(lines) or i + 4 >= len(lines) or i + 5 >= len(lines):
                 break
             transfer = lines[i + 5].split(" ")
             address = lines[i + 3]
@@ -93,21 +106,23 @@ def reload():
             transfer = 0
 
             if received_type == "MiB":
-                transfer += MibToGiB(float(received))
+                transfer += mib_to_gib(float(received))
             elif received_type == "KiB":
-                transfer += kibToGiB(float(received))
+                transfer += kib_to_gib(float(received))
             elif received_type == "GiB":
                 transfer += float(received)
 
             if sent_type == "MiB":
-                transfer += MibToGiB(float(sent))
+                transfer += mib_to_gib(float(sent))
             elif sent_type == "KiB":
-                transfer += kibToGiB(float(sent))
+                transfer += kib_to_gib(float(sent))
             elif sent_type == "GiB":
                 transfer += float(sent)
 
-            p = models.peer(name, address, user[2], user[3], user[4])
-            p.increaseTransfer(transfer)
+            temp_usage += transfer
+
+            p = models.Peer(name, address, user[2], user[3], user[4])
+            p.increase_transfer(transfer)
             p.last_handshake = last_handshake
             peerMap[name] = p
             total += p.transfer
@@ -117,7 +132,7 @@ def reload():
 
     for user in peers:
         if user[0] not in peerMap:
-            p = models.peer(user[0], user[1], user[2], user[3], user[4])
+            p = models.Peer(user[0], user[1], user[2], user[3], user[4])
             total += p.transfer
             peerMap[user[0]] = p
     if len(peerMap) > 0:
@@ -126,6 +141,8 @@ def reload():
         maxPeer = sortedPeer[0]
         maxUsage = maxPeer.transfer
         count = len(sortedPeer)
+
+    temp_usage = format(temp_usage, '.2f')
 
 
 def export():
@@ -137,13 +154,14 @@ def export():
     file.close()
 
 
-def set_transferToZero(name):
+def set_transfer_to_zero(name):
     peerMap[name].transfer = 0
     global sortedPeer
     sortedPeer = sorted(peerMap.values(), key=lambda peer: peer.transfer, reverse=True)
 
 
 def pause_user(name):
+    # file = open("test.conf", "r")
     file = open("/etc/wireguard/" + sys_name + ".conf", "r")
     lines = file.readlines()
     file.close()
@@ -164,14 +182,18 @@ def pause_user(name):
     db.write_to_db(connection, sortedPeer)
     connection.commit()
     file = open("/etc/wireguard/" + sys_name + ".conf", "w")
+    # file = open("test.conf", "w")
     file.writelines(lines)
     file.close()
     sheet.main()
+    db.add_usage_by_name(connection, conf_name, temp_usage)
+    connection.commit()
     os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")
     connection.close()
 
 
 def resume_user(name):
+    # file = open("test.conf", "r")
     file = open("/etc/wireguard/" + sys_name + ".conf", "r")
     lines = file.readlines()
     file.close()
@@ -189,12 +211,15 @@ def resume_user(name):
     db.resume_user(connection, name)
     connection.commit()
     reload()
-    set_transferToZero(name)
+    set_transfer_to_zero(name)
     db.write_to_db(connection, sortedPeer)
     connection.commit()
     file = open("/etc/wireguard/" + sys_name + ".conf", "w")
+    # file = open("test.conf", "w")
     file.writelines(lines)
     file.close()
     sheet.main()
+    db.add_usage_by_name(connection, conf_name, temp_usage)
+    connection.commit()
     os.system("sudo systemctl restart wg-quick@" + sys_name + ".service")
     connection.close()

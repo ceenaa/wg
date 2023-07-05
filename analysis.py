@@ -35,7 +35,7 @@ def daily_average():
     _, start_time, _ = db.get_usage_by_name(connection, conf_name)
     connection.close()
     start_time = start_time.split("-")
-    start_time = date(start_time[0], start_time[1], start_time[2])
+    start_time = date(year=int(start_time[0]), month=int(start_time[1]), day=int(start_time[2]))
     now_time = date.today()
 
     res = (now_time - start_time).days
@@ -47,7 +47,7 @@ def total_days():
     _, start_time, _ = db.get_usage_by_name(connection, conf_name)
     connection.close()
     start_time = start_time.split("-")
-    start_time = date(start_time[0], start_time[1], start_time[2])
+    start_time = date(year=int(start_time[0]), month=int(start_time[1]), day=int(start_time[2]))
 
     now_time = date.today()
     return (now_time - start_time).days

@@ -1,4 +1,4 @@
-class peer:
+class Peer:
     def __init__(self, name, address, last_handshake, transfer, active):
         self.name = name
         self.address = address
@@ -10,6 +10,6 @@ class peer:
         s = f"{self.name}\n{self.address}\n{self.last_handshake}\n{self.transfer}\n{self.active}"
         return s
 
-    def increaseTransfer(self, transfer):
+    def increase_transfer(self, transfer):
         self.transfer += transfer
         self.transfer = round(self.transfer, 2)

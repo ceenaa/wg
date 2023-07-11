@@ -8,7 +8,6 @@ import auto
 import db
 import sheet
 
-
 API_KEY = os.getenv("API_KEY")
 bot = telebot.TeleBot(API_KEY)
 
@@ -32,7 +31,7 @@ def average_request(message):
 @bot.message_handler(func=average_request)
 def send_average(message):
     try:
-        bot.send_message(message.chat.id, analysis.calcAverage())
+        bot.send_message(message.chat.id, analysis.calc_average())
     except Exception as err:
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
@@ -70,6 +69,58 @@ def send_count(message):
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
 
+def usage_request(message):
+    return message.text == "Usage"
+
+
+@bot.message_handler(func=usage_request)
+def send_usage(message):
+    try:
+        connection = db.connect()
+        data = db.get_usage_by_name(connection, analysis.conf_name)
+        name = data[0]
+        start_time = data[1]
+        usage = float(data[2]) + analysis.temp_usage
+        usage = format(usage, '.2f')
+        connection.close()
+        bot.send_message(message.chat.id,
+                         "Name: " + name + "\nStart time: " + start_time + " : " + str(analysis.total_days()) + "days" +"\nUsage: " + usage + " Gib")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+
+
+def reset_usage_request(message):
+    return message.text == "Reset usage"
+
+
+@bot.message_handler(func=reset_usage_request)
+def reset_usage(message):
+    try:
+        connection = db.connect()
+        db.reset_usage_and_date_by_name(connection, analysis.conf_name)
+        connection.commit()
+        connection.close()
+        bot.send_message(message.chat.id, "Usage reset!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+
+
+def make_usage_request(message):
+    return message.text == "Make usage"
+
+
+@bot.message_handler(func=make_usage_request)
+def make_usage(message):
+    try:
+        connection = db.connect()
+        db.make_usage_for_name(connection, analysis.conf_name)
+        connection.commit()
+        connection.close()
+        bot.send_message(message.chat.id, "Usage made!")
+    except Exception as err:
+        bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
+
+
 def max_request(message):
     return message.text == "Max"
 
@@ -103,7 +154,7 @@ def daily_average_request(message):
 @bot.message_handler(func=daily_average_request)
 def send_daily_average(message):
     try:
-        bot.send_message(message.chat.id, f"{round(analysis.dailyAverage(), 2)} Gib")
+        bot.send_message(message.chat.id, f"{round(analysis.daily_average(), 2)} Gib")
     except Exception as err:
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
@@ -128,7 +179,7 @@ def total_days_request(message):
 @bot.message_handler(func=total_days_request)
 def send_total_days(message):
     try:
-        bot.send_message(message.chat.id, analysis.totalDays())
+        bot.send_message(message.chat.id, analysis.total_days())
     except Exception as err:
         bot.send_message(message.chat.id, type(err).__name__ + " " + str(err))
 
@@ -217,5 +268,5 @@ def polling():
 
 analysis.reload()
 sheet.main()
-threading.Thread(target=lambda: auto.auto(30*60)).start()
+threading.Thread(target=lambda: auto.auto(30 * 60)).start()
 polling()

@@ -1,7 +1,5 @@
 import sqlite3
-
 import analysis
-
 
 def connect():
     conn = sqlite3.connect("users.db")
@@ -17,6 +15,13 @@ def create_table(conn):
                 transfer real,
                 active boolean
                 )""")
+
+    c.execute("""CREATE TABLE usages (
+                name text,
+                date text,
+                transfer real
+                )
+        """)
 
 
 def get_all(conn):
@@ -52,7 +57,7 @@ def load_all_peers(conn):
                   (name, address, last_handshake, transfer, active))
 
 
-def load_lastRecords(conn):
+def load_last_records(conn):
     c = conn.cursor()
     file = open("peers.txt", "r")
     lines = file.readlines()
@@ -89,3 +94,31 @@ def paused_users(conn):
     c = conn.cursor()
     c.execute("SELECT name FROM users WHERE active = 0")
     return c.fetchall()
+
+
+def get_usage_by_name(conn, name):
+    c = conn.cursor()
+    c.execute("SELECT * FROM usages WHERE name = ?", (name,))
+    data = c.fetchone()
+    return data[0], data[1], data[2]
+
+
+def make_usage_for_name(conn, name):
+    c = conn.cursor()
+    c.execute("INSERT INTO usages VALUES (?, date('now'), 0.01)", (name,))
+
+
+def reset_usage_and_date_by_name(conn, name):
+    c = conn.cursor()
+    if c.execute("SELECT * FROM usages WHERE name = ?", (name,)) == None:
+        c.execute("INSERT INTO usages VALUES (?, date('now'), 0.01)", (name,))
+    else:
+        c.execute("UPDATE usages SET transfer = 0.01 WHERE name = ?", (name,))
+        c.execute("UPDATE usages SET date = date('now') WHERE name = ?", (name,))
+
+
+def add_usage_by_name(conn, name, transfer):
+    c = conn.cursor()
+    c.execute("SELECT date FROM usages WHERE name = ?", (name,))
+    date = c.fetchone()
+    c.execute("UPDATE usages SET transfer = transfer + ? WHERE name = ?", (transfer, name))
